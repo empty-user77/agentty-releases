@@ -1,0 +1,12 @@
+{
+  "groups": [
+    {
+      "title": { "en": "Getting started", "ko": "시작하기" },
+      "pages": [
+        { "slug": "introduction", "title": { "en": "Introduction", "ko": "소개" } },
+        { "slug": "installation", "title": { "en": "Installation", "ko": "설치" } },
+        { "slug": "quick-start", "title": { "en": "Quick start", "ko": "빠른 시작" } }
+      ]
+    }
+  ]
+}
