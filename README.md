@@ -27,7 +27,7 @@
   <a href="https://github.com/empty-user77/agentty-releases/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/empty-user77/agentty-releases?label=release&color=f5c518"></a>
   <img alt="Platform: macOS, Windows, Linux" src="https://img.shields.io/badge/platform-macOS%20%C2%B7%20Windows%20%C2%B7%20Linux-lightgrey.svg">
   <img alt="Apple Silicon" src="https://img.shields.io/badge/Apple%20Silicon-arm64-lightgrey.svg">
-  <img alt="Size: 17MB" src="https://img.shields.io/badge/size-17MB-brightgreen.svg">
+  <img alt="Download: 14MB" src="https://img.shields.io/badge/download-14MB-brightgreen.svg">
 </p>
 
 <p align="center">
@@ -46,7 +46,7 @@ Agentty is a native terminal for AI coding agents — **Claude Code**, **Codex**
 more. It knows which agent is working, which finished and which is waiting for you, and gives each one what the work
 needs: the project's files, its Git history, its containers and its databases.
 
-> 17MB · no Electron · 13+ agent CLIs · one window for all of them
+> 14MB download · no Electron · 13+ agent CLIs · one window for all of them
 
 ### Why Agentty
 
@@ -103,7 +103,7 @@ Agentty는 AI 코딩 에이전트를 위한 네이티브 터미널입니다. **C
 비롯해 십여 종을 지원합니다. 어떤 에이전트가 작업 중이고, 끝났고, 답을 기다리는지 알고 있으며, 각 에이전트에게
 작업에 필요한 것 — 프로젝트의 파일, Git 이력, 컨테이너, 데이터베이스 — 을 함께 쥐여 줍니다.
 
-> 17MB · Electron 없음 · 13종 이상의 에이전트 CLI · 전부 한 창에서
+> 14MB 다운로드 · Electron 없음 · 13종 이상의 에이전트 CLI · 전부 한 창에서
 
 ### 왜 Agentty인가
 
@@ -160,7 +160,7 @@ Agentty は AI コーディングエージェントのためのネイティブ�
 Amp、OpenCode など十数種に対応します。どのエージェントが作業中で、終わっていて、返事を待っているかを把握し、
 それぞれに作業で必要なもの — プロジェクトのファイル、Git の履歴、コンテナ、データベース — を渡します。
 
-> 17MB · Electron なし · 13 種類以上のエージェント CLI · すべてをひとつのウィンドウで
+> 14MB のダウンロード · Electron なし · 13 種類以上のエージェント CLI · すべてをひとつのウィンドウで
 
 ### Agentty を選ぶ理由
 
@@ -217,7 +217,7 @@ Agentty 是为 AI 编码智能体打造的原生终端，支持 **Claude Code**�
 它知道哪个智能体正在工作、哪个已完成、哪个在等你回答，并把工作真正需要的东西交给它们：项目的文件、Git 历史、
 容器和数据库。
 
-> 17MB · 无 Electron · 13+ 种智能体 CLI · 全部集中在一个窗口
+> 14MB 下载 · 无 Electron · 13+ 种智能体 CLI · 全部集中在一个窗口
 
 ### 为什么选择 Agentty
 
