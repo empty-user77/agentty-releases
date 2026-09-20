@@ -74,8 +74,6 @@ Get the latest build from [Releases](https://github.com/empty-user77/agentty-rel
 | Debian 12+ / Ubuntu 22.04+ | `Agentty-X.Y.Z-linux-amd64.deb` | `sudo apt install ./Agentty-*.deb` |
 | RHEL 9+ / Fedora | `Agentty-X.Y.Z-linux-x86_64.rpm` | `sudo dnf install ./Agentty-*.rpm` |
 
-> The Windows and Linux packages ship from the next release; the current one carries the macOS build.
-
 Agentty checks for new versions at launch and every hour: macOS and Windows install and relaunch for you, Linux
 points at the new packages. `claude` and/or `codex` on your `PATH` gives you agent tabs — Settings → System installs
 what is missing.
@@ -132,8 +130,6 @@ Agentty는 AI 코딩 에이전트를 위한 네이티브 터미널입니다. **C
 | Windows 10 1809+ (x64) | `Agentty-X.Y.Z-windows-x64-setup.exe` | 사용자 단위 설치, 관리자 권한 불필요 |
 | Debian 12+ / Ubuntu 22.04+ | `Agentty-X.Y.Z-linux-amd64.deb` | `sudo apt install ./Agentty-*.deb` |
 | RHEL 9+ / Fedora | `Agentty-X.Y.Z-linux-x86_64.rpm` | `sudo dnf install ./Agentty-*.rpm` |
-
-> Windows·Linux 패키지는 다음 릴리즈부터 제공됩니다. 현재 릴리즈에는 macOS 빌드가 들어 있습니다.
 
 Agentty는 실행할 때와 매시간 새 버전을 확인합니다. macOS와 Windows는 설치 후 재시작까지 해 주고, Linux는 새 패키지를
 안내합니다. `PATH`에 `claude` 또는 `codex`가 있으면 에이전트 탭이 열리고, 없는 도구는 설정 → 환경 점검에서 설치할 수
@@ -192,8 +188,6 @@ Amp、OpenCode など十数種に対応します。どのエージェントが�
 | Debian 12+ / Ubuntu 22.04+ | `Agentty-X.Y.Z-linux-amd64.deb` | `sudo apt install ./Agentty-*.deb` |
 | RHEL 9+ / Fedora | `Agentty-X.Y.Z-linux-x86_64.rpm` | `sudo dnf install ./Agentty-*.rpm` |
 
-> Windows と Linux のパッケージは次のリリースから提供されます。現在のリリースには macOS ビルドが入っています。
-
 Agentty は起動時と 1 時間ごとに新しいバージョンを確認します。macOS と Windows はインストールと再起動まで行い、
 Linux は新しいパッケージを案内します。`PATH` に `claude` や `codex` があればエージェントタブが使え、足りない
 ツールは 設定 → システムチェック から導入できます。
@@ -248,8 +242,6 @@ Agentty 是为 AI 编码智能体打造的原生终端，支持 **Claude Code**�
 | Windows 10 1809+（x64） | `Agentty-X.Y.Z-windows-x64-setup.exe` | 按用户安装，无需管理员权限 |
 | Debian 12+ / Ubuntu 22.04+ | `Agentty-X.Y.Z-linux-amd64.deb` | `sudo apt install ./Agentty-*.deb` |
 | RHEL 9+ / Fedora | `Agentty-X.Y.Z-linux-x86_64.rpm` | `sudo dnf install ./Agentty-*.rpm` |
-
-> Windows 与 Linux 安装包将从下一个版本开始提供，当前版本包含 macOS 构建。
 
 Agentty 会在启动时和每小时检查新版本：macOS 与 Windows 自动安装并重启，Linux 指向新的软件包。`PATH` 中有
 `claude` 或 `codex` 即可使用智能体标签页，缺少的工具可在 设置 → 环境检查 中安装。
