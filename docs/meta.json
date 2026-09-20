@@ -1,11 +1,89 @@
 {
   "groups": [
     {
-      "title": { "en": "Getting started", "ko": "시작하기" },
+      "title": {
+        "en": "Getting started",
+        "ko": "시작하기"
+      },
       "pages": [
-        { "slug": "introduction", "title": { "en": "Introduction", "ko": "소개" } },
-        { "slug": "installation", "title": { "en": "Installation", "ko": "설치" } },
-        { "slug": "quick-start", "title": { "en": "Quick start", "ko": "빠른 시작" } }
+        {
+          "slug": "introduction",
+          "title": {
+            "en": "Introduction",
+            "ko": "소개"
+          }
+        },
+        {
+          "slug": "installation",
+          "title": {
+            "en": "Installation",
+            "ko": "설치"
+          }
+        },
+        {
+          "slug": "quick-start",
+          "title": {
+            "en": "Quick start",
+            "ko": "빠른 시작"
+          }
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Plugins",
+        "ko": "플러그인"
+      },
+      "pages": [
+        {
+          "slug": "plugins-overview",
+          "title": {
+            "en": "Using plugins",
+            "ko": "플러그인 사용하기"
+          }
+        },
+        {
+          "slug": "plugin-quickstart",
+          "title": {
+            "en": "Plugin quick start",
+            "ko": "플러그인 빠른 시작"
+          }
+        },
+        {
+          "slug": "plugin-manifest",
+          "title": {
+            "en": "Manifest reference",
+            "ko": "매니페스트 레퍼런스"
+          }
+        },
+        {
+          "slug": "plugin-sdk",
+          "title": {
+            "en": "Node.js SDK",
+            "ko": "Node.js SDK"
+          }
+        },
+        {
+          "slug": "plugin-protocol",
+          "title": {
+            "en": "Plugin protocol",
+            "ko": "플러그인 프로토콜"
+          }
+        },
+        {
+          "slug": "plugin-permissions",
+          "title": {
+            "en": "Permissions",
+            "ko": "권한"
+          }
+        },
+        {
+          "slug": "plugin-publishing",
+          "title": {
+            "en": "Publishing",
+            "ko": "배포하기"
+          }
+        }
       ]
     }
   ]
