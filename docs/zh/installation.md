@@ -9,13 +9,7 @@ Agentty 免费且无需账号。下载、拖入、打开终端即可。
 
 所有版本都发布在[发布页面](https://github.com/empty-user77/agentty-releases/releases)。
 
-| 平台 | 文件 | 说明 |
-|---|---|---|
-| macOS 13+（Apple 芯片） | `Agentty-X.Y.Z-…-arm64.dmg` | 已签名并公证 |
-
-打开 DMG，把 **Agentty** 拖进**应用程序**。由于已签名并公证，启动时不会出现 Gatekeeper 警告。
-
-每个版本还附带 `Agentty-X.Y.Z-arm64.zip` 和可用于校验下载的 `SHA256SUMS.txt`。
+**macOS 13 及以上，Apple 芯片** —— 打开 `Agentty-X.Y.Z-…-arm64.dmg`，把 **Agentty** 拖进**应用程序**。
 
 > [!NOTE]
 > **Windows 与 Linux 的构建尚未发布。** Agentty 在 macOS 上开发，目前也只有 macOS 提供下载。代码可在 Windows 10 1809 及以上和 Linux（X11 与 Wayland）上构建运行，两个平台的安装包也在计划中。差异请参见[平台](/docs/platforms)。
@@ -45,18 +39,11 @@ git 页面、工作树和分支切换使用 `PATH` 中的 `git`。在 Windows �
 
 ## 更新
 
-Agentty 在启动时和每小时检查一次发布频道。
-
-在 macOS 上，它会下载已签名的 DMG、验证后替换应用并重新启动。
-
-下载只会从 GitHub 托管的文件进行，并在使用前与公布的校验和比对验证。
+Agentty 在启动时和每小时检查一次新版本。在 macOS 上它会安装更新并自动重启。
 
 ## 从源码构建
 
 源码仓库尚未公开。我们计划将其开源；在此之前，发布页面上的 macOS 构建就是运行 Agentty 的方式。
-
-> [!NOTE]
-> 在官方发布流水线之外制作的构建完全不会发送使用统计，因为分析凭据只存在于官方发布版中。参见[使用统计](/docs/telemetry)。
 
 ## Agentty 的文件位置
 

@@ -9,13 +9,7 @@ Agentty is free and needs no account. Download it, drag it in, and start a termi
 
 Every release is published on the [releases page](https://github.com/empty-user77/agentty-releases/releases).
 
-| Platform | File | Notes |
-|---|---|---|
-| macOS 13+ (Apple silicon) | `Agentty-X.Y.Z-…-arm64.dmg` | Signed and notarized |
-
-Open the DMG and drag **Agentty** into **Applications**. The build is signed and notarized, so it opens without a Gatekeeper warning.
-
-Each release also ships `Agentty-X.Y.Z-arm64.zip` and a `SHA256SUMS.txt` you can check the download against.
+**macOS 13 or later, Apple silicon** — `Agentty-X.Y.Z-…-arm64.dmg`. Open it and drag **Agentty** into **Applications**.
 
 > [!NOTE]
 > **Windows and Linux builds are not published yet.** Agentty is developed on macOS, and macOS is the only platform with a download today. The code builds and runs on Windows 10 1809+ and on Linux (X11 and Wayland), and packaged installers for both are planned — see [Platforms](/docs/platforms) for what differs there.
@@ -45,18 +39,11 @@ The git page, working trees and branch switching use the `git` on your `PATH`. O
 
 ## Updating
 
-Agentty checks the release channel at launch and hourly.
-
-On macOS it downloads the signed DMG, verifies it, swaps the application and relaunches.
-
-Only files hosted on GitHub are ever downloaded, and each one is checked against the published checksum before it is used.
+Agentty checks for new versions at launch and hourly. On macOS it installs the update and relaunches itself.
 
 ## Building from source
 
 The source repository is not public yet. Opening it is planned; until then, the macOS build on the releases page is the way to run Agentty.
-
-> [!NOTE]
-> Builds made outside the official release pipeline send no usage statistics at all — the analytics credentials exist only in official release builds. See [Telemetry](/docs/telemetry).
 
 ## Where Agentty keeps its files
 
