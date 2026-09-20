@@ -3,28 +3,36 @@
     {
       "title": {
         "en": "Getting started",
-        "ko": "시작하기"
+        "ko": "시작하기",
+        "ja": "はじめに",
+        "zh": "开始使用"
       },
       "pages": [
         {
           "slug": "introduction",
           "title": {
             "en": "Introduction",
-            "ko": "소개"
+            "ko": "소개",
+            "ja": "概要",
+            "zh": "简介"
           }
         },
         {
           "slug": "installation",
           "title": {
             "en": "Installation",
-            "ko": "설치"
+            "ko": "설치",
+            "ja": "インストール",
+            "zh": "安装"
           }
         },
         {
           "slug": "quick-start",
           "title": {
             "en": "Quick start",
-            "ko": "빠른 시작"
+            "ko": "빠른 시작",
+            "ja": "クイックスタート",
+            "zh": "快速开始"
           }
         }
       ]
@@ -32,56 +40,72 @@
     {
       "title": {
         "en": "Plugins",
-        "ko": "플러그인"
+        "ko": "플러그인",
+        "ja": "プラグイン",
+        "zh": "插件"
       },
       "pages": [
         {
           "slug": "plugins-overview",
           "title": {
             "en": "Using plugins",
-            "ko": "플러그인 사용하기"
+            "ko": "플러그인 사용하기",
+            "ja": "プラグインを使う",
+            "zh": "使用插件"
           }
         },
         {
           "slug": "plugin-quickstart",
           "title": {
             "en": "Plugin quick start",
-            "ko": "플러그인 빠른 시작"
+            "ko": "플러그인 빠른 시작",
+            "ja": "プラグイン クイックスタート",
+            "zh": "插件快速开始"
           }
         },
         {
           "slug": "plugin-manifest",
           "title": {
             "en": "Manifest reference",
-            "ko": "매니페스트 레퍼런스"
+            "ko": "매니페스트 레퍼런스",
+            "ja": "マニフェスト リファレンス",
+            "zh": "清单参考"
           }
         },
         {
           "slug": "plugin-sdk",
           "title": {
             "en": "Node.js SDK",
-            "ko": "Node.js SDK"
+            "ko": "Node.js SDK",
+            "ja": "Node.js SDK",
+            "zh": "Node.js SDK"
           }
         },
         {
           "slug": "plugin-protocol",
           "title": {
             "en": "Plugin protocol",
-            "ko": "플러그인 프로토콜"
+            "ko": "플러그인 프로토콜",
+            "ja": "プラグイン プロトコル",
+            "zh": "插件协议"
           }
         },
         {
           "slug": "plugin-permissions",
           "title": {
             "en": "Permissions",
-            "ko": "권한"
+            "ko": "권한",
+            "ja": "権限",
+            "zh": "权限"
           }
         },
         {
           "slug": "plugin-publishing",
           "title": {
             "en": "Publishing",
-            "ko": "배포하기"
+            "ko": "배포하기",
+            "ja": "配布する",
+            "zh": "发布"
           }
         }
       ]
