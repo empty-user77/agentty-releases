@@ -38,7 +38,7 @@ Agentty has no backend. Session lists, search, usage numbers, cost estimates and
 Secrets you give Agentty go into the operating system's credential store — Keychain on macOS, Credential Manager on Windows, Secret Service on Linux.
 
 > [!NOTE]
-> The agent CLIs you run still talk to their own providers, exactly as they would in any terminal. What Agentty itself sends is described in [Telemetry](/docs/telemetry).
+> The agent CLIs you run talk to their own providers — Anthropic for Claude Code, OpenAI for Codex — directly from your computer under your own account with them, exactly as in any other terminal. Agentty does not sit in the middle of that: it neither relays nor receives what they send, and that exchange is governed by each provider's own terms and privacy policy. What Agentty itself sends is described in [Telemetry](/docs/telemetry).
 
 ## What you get
 
