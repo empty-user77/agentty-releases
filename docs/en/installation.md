@@ -9,10 +9,19 @@ Agentty is free and needs no account. Download it, drag it in, and start a termi
 
 Every release is published on the [releases page](https://github.com/empty-user77/agentty-releases/releases).
 
-**macOS 13 or later, Apple silicon** — `Agentty-X.Y.Z-…-arm64.dmg`. Open it and drag **Agentty** into **Applications**.
+**macOS 13 or later, Apple silicon** — `Agentty-X.Y.Z-…-arm64.dmg`. Open it and drag **Agentty** into **Applications**. The app is signed with a Developer ID and notarized by Apple, so it opens without a warning.
 
 > [!NOTE]
-> **Windows and Linux builds are not published yet.** Agentty is developed on macOS, and macOS is the only platform with a download today. The code builds and runs on Windows 10 1809+ and on Linux (X11 and Wayland), and packaged installers for both are planned — see [Platforms](/docs/platforms) for what differs there.
+> There is no Intel Mac build: Agentty for macOS is Apple silicon only.
+
+**Windows 10 version 1809 or later, x64** — `Agentty-X.Y.Z-windows-x64-setup.exe`. It installs for your user only and needs no administrator rights.
+
+> [!IMPORTANT]
+> **The Windows installer is not code-signed yet**, so Windows SmartScreen may say the publisher is unknown. To continue, choose **More info → Run anyway**. If your browser refuses to download the `.exe` at all — Chrome blocks unsigned executables — take `Agentty-X.Y.Z-windows-x64-setup.zip` instead and unzip it; it holds the same installer.
+
+**Linux, x86_64** — Debian 12+ / Ubuntu 22.04+: `sudo apt install ./Agentty-X.Y.Z-linux-amd64.deb`. RHEL 9+ / Fedora: `sudo dnf install ./Agentty-X.Y.Z-linux-x86_64.rpm`.
+
+Checksums for every file are in `Agentty-X.Y.Z-SHA256SUMS.txt`. What differs between the three is in [Platforms](/docs/platforms).
 
 ## Agent command line tools
 
@@ -39,11 +48,14 @@ The git page, working trees and branch switching use the `git` on your `PATH`. O
 
 ## Updating
 
-Agentty checks for new versions at launch and hourly. On macOS it installs the update and relaunches itself.
+Agentty checks for new versions at launch and hourly.
+
+- **macOS and Windows** — Agentty downloads the update, checks it against the release checksums, installs it and relaunches.
+- **Linux** — Agentty tells you a new version is out and links to the release page; install the new `.deb` or `.rpm` with your package manager.
 
 ## Building from source
 
-The source repository is not public yet. Opening it is planned; until then, the macOS build on the releases page is the way to run Agentty.
+The source repository is not public yet. Opening it is planned; until then, the builds on the releases page are the way to run Agentty.
 
 ## Where Agentty keeps its files
 

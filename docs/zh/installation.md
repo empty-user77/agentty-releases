@@ -9,10 +9,19 @@ Agentty 免费且无需账号。下载、拖入、打开终端即可。
 
 所有版本都发布在[发布页面](https://github.com/empty-user77/agentty-releases/releases)。
 
-**macOS 13 及以上，Apple 芯片** —— 打开 `Agentty-X.Y.Z-…-arm64.dmg`，把 **Agentty** 拖进**应用程序**。
+**macOS 13 及以上，Apple 芯片** —— 打开 `Agentty-X.Y.Z-…-arm64.dmg`，把 **Agentty** 拖进**应用程序**。应用已用 Developer ID 签名并通过 Apple 公证，因此不会出现警告。
 
 > [!NOTE]
-> **Windows 与 Linux 的构建尚未发布。** Agentty 在 macOS 上开发，目前也只有 macOS 提供下载。代码可在 Windows 10 1809 及以上和 Linux（X11 与 Wayland）上构建运行，两个平台的安装包也在计划中。差异请参见[平台](/docs/platforms)。
+> 没有 Intel Mac 版本。macOS 版 Agentty 仅支持 Apple 芯片。
+
+**Windows 10 1809 及以上，x64** —— 运行 `Agentty-X.Y.Z-windows-x64-setup.exe`。按用户安装，无需管理员权限。
+
+> [!IMPORTANT]
+> **Windows 安装程序尚未进行代码签名**，因此 Windows SmartScreen 可能提示发布者未知。要继续，请选择**更多信息 → 仍要运行**。如果浏览器直接拒绝下载 `.exe`（Chrome 会拦截未签名的可执行文件），请改为下载 `Agentty-X.Y.Z-windows-x64-setup.zip` 并解压，里面是同一个安装程序。
+
+**Linux，x86_64** —— Debian 12+ / Ubuntu 22.04+：`sudo apt install ./Agentty-X.Y.Z-linux-amd64.deb`。RHEL 9+ / Fedora：`sudo dnf install ./Agentty-X.Y.Z-linux-x86_64.rpm`。
+
+所有文件的校验和见 `Agentty-X.Y.Z-SHA256SUMS.txt`。三个平台的差异请参见[平台](/docs/platforms)。
 
 ## 智能体命令行工具
 
@@ -39,11 +48,14 @@ git 页面、工作树和分支切换使用 `PATH` 中的 `git`。在 Windows �
 
 ## 更新
 
-Agentty 在启动时和每小时检查一次新版本。在 macOS 上它会安装更新并自动重启。
+Agentty 在启动时和每小时检查一次新版本。
+
+- **macOS 和 Windows** —— 下载更新，用发布校验和验证后安装并重启。
+- **Linux** —— 只提示有新版本并给出发布页面链接，新的 `.deb` 或 `.rpm` 请用包管理器自行安装。
 
 ## 从源码构建
 
-源码仓库尚未公开。我们计划将其开源；在此之前，发布页面上的 macOS 构建就是运行 Agentty 的方式。
+源码仓库尚未公开。我们计划将其开源；在此之前，发布页面上的构建就是运行 Agentty 的方式。
 
 ## Agentty 的文件位置
 

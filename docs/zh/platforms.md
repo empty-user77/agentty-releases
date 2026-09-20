@@ -3,7 +3,7 @@ title: 平台
 description: macOS、Windows 和 Linux 之间的差异。
 ---
 
-Agentty 在 macOS 上开发，macOS 既是基准平台，也是目前唯一提供下载的平台。Windows 和 Linux 具备所有不依赖 AppKit 或 WebKit 的功能。
+Agentty 在 macOS 上开发，macOS 是基准平台。三个平台都已提供下载，Windows 和 Linux 具备所有不依赖 AppKit 或 WebKit 的功能。
 
 ## 差异
 

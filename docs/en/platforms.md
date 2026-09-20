@@ -3,7 +3,7 @@ title: Platforms
 description: What differs between macOS, Windows and Linux.
 ---
 
-Agentty is developed on macOS, which remains the reference platform and the only one with a published download today. Windows and Linux share every feature that does not depend on AppKit or WebKit.
+Agentty is developed on macOS, which remains the reference platform. All three have a published download, and Windows and Linux share every feature that does not depend on AppKit or WebKit.
 
 ## What differs
 
@@ -22,7 +22,7 @@ Shortcuts are translated: ⌘ → Ctrl+Shift, ⇧⌘ → Ctrl+Alt+Shift, ⌥⌘ 
 
 ## Windows
 
-Requires Windows 10 version 1809 or later, x64. The setup program installs for the current user without administrator rights, and adds a Start menu entry, `agentty://` links, "Open in Agentty" on folders, and `agentty` on your `PATH`.
+Requires Windows 10 version 1809 or later, x64. The setup program installs for the current user without administrator rights, and adds a Start menu entry, `agentty://` links, "Open in Agentty" on folders, and `agentty` on your `PATH`. It is not code-signed yet, so SmartScreen may warn on first run — see [Installation](/docs/installation).
 
 Claude Code runs its hooks through Git Bash, so **Git for Windows** is required for pane status. **Settings → System check** lists what is missing and installs each tool in a new tab.
 

@@ -3,7 +3,7 @@ title: プラットフォーム
 description: macOS、Windows、Linux での違い。
 ---
 
-Agentty は macOS で開発されており、macOS が基準であり、現在ダウンロードが公開されている唯一のプラットフォームです。Windows と Linux は、AppKit や WebKit に依存しないすべての機能を同じように備えます。
+Agentty は macOS で開発されており、macOS が基準のプラットフォームです。3 つすべてにダウンロードが公開されており、Windows と Linux は AppKit や WebKit に依存しないすべての機能を同じように備えます。
 
 ## 違い
 
