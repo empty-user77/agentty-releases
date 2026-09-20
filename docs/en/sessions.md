@@ -5,6 +5,8 @@ description: Browse, search and resume the Claude Code and Codex sessions alread
 
 The agent CLIs write their conversations to your disk. Agentty reads those files, so every session you have ever run is browsable — including the ones you started outside Agentty.
 
+The files are JSONL — one line per event — written by Claude Code and Codex as they work. Agentty parses them to build the list, the search index and the usage numbers. It never writes to them.
+
 ## Browsing
 
 **⇧⌘S** opens the session list: everything in `~/.claude` and `~/.codex`, newest first, with title, folder and agent.

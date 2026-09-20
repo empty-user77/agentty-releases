@@ -12,6 +12,8 @@ description: The git page, branch switching from any pane, and the worktree per 
 - Review the diff file by file, stage what you want, and commit (⌘↩).
 - Browse history, and merge branches.
 
+Agentty drives your own `git`, with your configuration and credentials. Every command runs non-interactively, so nothing can hang waiting for a prompt you can't see — if a push needs credentials your credential helper does not have, it fails with a message instead of stalling.
+
 ## From a pane
 
 Click the branch name in any pane header to switch branches, pull, push, or copy the name — without leaving your terminal.
@@ -22,6 +24,14 @@ When you open a second AI session in a project where another one is already work
 
 - Worktrees live in `~/.agentty/worktrees/`, on branches named `agentty/<name>`.
 - Turn this off in **Settings → General** if you want every session in the same folder.
+
+### How it works
+
+Agentty runs `git worktree add` on a new branch `agentty/<name>`, taken from the project's **default branch** rather than whatever the project folder currently has checked out — so a session never builds on another session's unmerged work.
+
+The trees are created under `~/.agentty/worktrees/<project>-<hash of its path>/<name>/`, outside the project. Keeping them out of the project folder matters: a copy of the code inside it would be walked by every search, file watcher and build.
+
+Agentty only ever removes trees under that folder. Worktrees you made yourself are listed in the files panel and left alone.
 
 ## The files panel
 

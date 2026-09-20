@@ -64,6 +64,15 @@
           }
         },
         {
+          "slug": "advisor",
+          "title": {
+            "en": "Claude advisor",
+            "ko": "Claude Advisor",
+            "ja": "Claude Advisor",
+            "zh": "Claude Advisor"
+          }
+        },
+        {
           "slug": "sessions",
           "title": {
             "en": "Sessions",
@@ -106,6 +115,24 @@
             "ko": "모니터링",
             "ja": "モニタリング",
             "zh": "监控"
+          }
+        },
+        {
+          "slug": "databases",
+          "title": {
+            "en": "Databases",
+            "ko": "데이터베이스",
+            "ja": "データベース",
+            "zh": "数据库"
+          }
+        },
+        {
+          "slug": "docker",
+          "title": {
+            "en": "Docker",
+            "ko": "Docker",
+            "ja": "Docker",
+            "zh": "Docker"
           }
         },
         {

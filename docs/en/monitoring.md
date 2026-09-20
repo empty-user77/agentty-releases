@@ -9,6 +9,8 @@ description: What your AI work costs, which AI processes are running, and what y
 
 Cost, calls, cache hit rate and tokens, broken down by model, project and tool. The numbers come from the transcript files the agent CLIs already wrote on your disk.
 
+Counting is not as simple as summing lines. Claude Code writes one JSONL line per content block, so a single API response appears several times with the same message id; those are de-duplicated by that id. Codex writes one usage record per response instead, keyed by response id. Agentty follows each format so a response is counted once.
+
 Claude model prices are built in. For other models — the ones Codex uses, for instance — add prices in `~/.agentty/pricing.json` and they are included:
 
 ```json
@@ -36,9 +38,3 @@ A capture proxy that lists what your tabs talk to: start capture, open a tab, fi
 - Records live in memory, are limited in number, are never written to disk, and disappear when Agentty quits.
 
 Stopping capture stops the recording. Tabs that were given the proxy keep using it so they don't lose their network.
-
-## Docker
-
-In a project with a compose file, a Dockerfile or containers of its own, the status bar shows how many of its containers run. Click it for a panel with each service's image, state and ports; start, stop, restart, `compose up -d` and `compose down` (asked twice, volumes kept), and logs in a new tab.
-
-Environment values from compose files are never shown.
