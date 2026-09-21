@@ -75,7 +75,7 @@ description: マーケットプレイスに登録するか、Git リポジトリ
 | `id` | 2〜40 文字の `a-z 0-9 -`。ファイルは `plugins/<id>.json` |
 | `name`, `version`, `description` | Agentty に表示されます。`name` は 60 文字、`description` は 300 文字まで。`version` は `major.minor.patch` |
 | `publisher`, `license` | 作った人と、そのライセンス |
-| `source` | モジュールをビルドした公開リポジトリ — **必須** |
+| `source` | モジュールをビルドした公開リポジトリ — **必須**。`github.com`・`gitlab.com`・`codeberg.org`・`git.sr.ht` のいずれかで、GitHub である必要はありません |
 | `homepage`, `keywords`, `icon` | 任意。アイコンは Agentty のアイコン集の名前 |
 | `apiVersion` | モジュールが対象とするプラグインプロトコル。`1` なら省略 |
 | `surface` | アイコンの位置: `sidebar`, `pane`（既定）, `status` |

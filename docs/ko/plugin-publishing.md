@@ -75,7 +75,7 @@ description: 마켓플레이스에 플러그인을 등록하거나, Git 저장�
 | `id` | 2~40자의 `a-z 0-9 -`. 파일은 `plugins/<id>.json` |
 | `name`, `version`, `description` | Agentty에 표시됨. `name`은 60자, `description`은 300자까지. `version`은 `major.minor.patch` |
 | `publisher`, `license` | 만든 사람과 라이선스 |
-| `source` | 모듈을 빌드한 공개 저장소 — **필수** |
+| `source` | 모듈을 빌드한 공개 저장소 — **필수**. `github.com`, `gitlab.com`, `codeberg.org`, `git.sr.ht` 중 하나면 되고, GitHub일 필요는 없습니다 |
 | `homepage`, `keywords`, `icon` | 선택. 아이콘은 Agentty 아이콘 집합의 이름 |
 | `apiVersion` | 모듈이 대상으로 한 플러그인 프로토콜. `1`이면 생략 |
 | `surface` | 아이콘 위치: `sidebar`, `pane`(기본), `status` |

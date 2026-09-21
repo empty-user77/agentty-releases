@@ -75,7 +75,7 @@ description: 把插件登记到市场，或者自己以 Git 仓库、文件夹�
 | `id` | 2–40 个字符的 `a-z 0-9 -`；文件名为 `plugins/<id>.json` |
 | `name`、`version`、`description` | 在 Agentty 中展示。`name` 最多 60 字符，`description` 最多 300，`version` 为 `major.minor.patch` |
 | `publisher`、`license` | 作者，以及许可证 |
-| `source` | 模块由之构建的公开仓库——**必填** |
+| `source` | 模块由之构建的公开仓库——**必填**。可以在 `github.com`、`gitlab.com`、`codeberg.org` 或 `git.sr.ht`，不一定要是 GitHub |
 | `homepage`、`keywords`、`icon` | 可选；图标取自 Agentty 的图标集 |
 | `apiVersion` | 模块面向的插件协议版本；为 `1` 时可省略 |
 | `surface` | 图标的位置：`sidebar`、`pane`（默认）或 `status` |

@@ -75,7 +75,7 @@ A plugin in the list is **a WebAssembly module with its source in the open**. Th
 | `id` | 2–40 characters, `a-z 0-9 -`; the file is `plugins/<id>.json` |
 | `name`, `version`, `description` | shown in Agentty. `name` up to 60 characters, `description` up to 300, `version` is `major.minor.patch` |
 | `publisher`, `license` | who made it, and under what licence |
-| `source` | the public repository the module is built from — **required** |
+| `source` | the public repository the module is built from — **required**. On `github.com`, `gitlab.com`, `codeberg.org` or `git.sr.ht`; it does not have to be GitHub |
 | `homepage`, `keywords`, `icon` | optional; the icon is a name from Agentty's set |
 | `apiVersion` | the plugin protocol the module is built against; leave it out for `1` |
 | `surface` | where its icon sits: `sidebar`, `pane` (default) or `status` |
