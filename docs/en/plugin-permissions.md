@@ -52,12 +52,14 @@ Context is filtered by what the plugin declared. Without `workspace.read`, folde
 
 ## Links are not trusted
 
-`agentty://` links can come from anywhere, including a web page. For a minute after a link reaches a plugin, Agentty
+`agentty://` links can come from anywhere, including a web page. Once a link has reached a plugin, and for as long as that plugin keeps running, Agentty
 
-- routes that plugin's `prompt/inject` through **Send to…** whatever target it asked for, and
+- routes that plugin's `prompt/inject` through **Send to…** whatever target it asked for, and never presses Enter, and
 - refuses `terminal/send` outright.
 
-Clicks in the panel the link opened do not lift this, so a link cannot turn one click into typing inside a terminal.
+Nothing lifts it while the plugin runs. A click in the panel the link opened is not consent to type into a terminal, and neither is waiting — a plugin can wait as easily as a user can click. **Restarting the plugin is what clears it.**
+
+The one thing a link-reached plugin can still do outside Agentty is `host/openUrl`, one address at a time. Agentty cannot tell a good address from a bad one, so that part is yours: treat whatever a link hands you as text from a stranger, and never open an address it gave you unexamined.
 
 > [!IMPORTANT]
 > If your plugin handles links, validate every parameter. The Cosmica plugin only opens `.md` files inside the Cosmica notes folder and refuses paths outside it.
