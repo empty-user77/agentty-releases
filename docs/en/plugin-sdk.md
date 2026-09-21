@@ -104,7 +104,7 @@ plugin.onEvent('notes', (event, context) => {
 ```
 
 > [!NOTE]
-> Limits: 2 000 elements, 12 levels deep, 20 000 characters per text. Panel updates are drawn at most every 50 ms and notifications at most one per 700 ms. A plugin sending more than 240 messages a second is stopped as a runaway.
+> Limits: 2 000 elements, 12 levels deep, 20 000 characters per string — a `choice`'s options and a list item's buttons count as elements too. Panel updates are drawn at most every 50 ms and notifications at most one per 700 ms. A plugin sending more than 240 messages a second is stopped as a runaway.
 
 ## Context
 

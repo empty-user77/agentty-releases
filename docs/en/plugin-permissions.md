@@ -94,10 +94,11 @@ Agentty protects itself from a plugin behaving badly, whether or not it meant to
 |---|---|
 | Panel redraws | at most one every 50 ms |
 | Notifications | at most one every 700 ms; the rest are answered normally and dropped |
+| Opening a URL | at most one every 700 ms — `host/openUrl` is throttled like a notification |
 | Messages | more than 240 a second stops the plugin as a runaway |
-| UI tree | 2,000 elements, 12 levels deep, 20,000 characters per text |
+| UI tree | 2,000 elements, 12 levels deep, 20,000 characters per string. A `choice`'s options and a list item's buttons each count as elements |
 | Line length | 16 MB on stdout and stderr |
-| WebAssembly | 64 MB module, 64 MB memory, 16 MB per message, 256 messages while handling one |
+| WebAssembly | 64 MB module, 64 MB memory, 16 MB per message, 256 messages while handling one — `send` and `log` together |
 
 ## Writing a plugin that deserves it
 

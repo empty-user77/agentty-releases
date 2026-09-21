@@ -117,7 +117,7 @@ Put the module next to `agentty-plugin.json`, then **Plugins → Install from Fo
 | Memory | 64 MB |
 | One message | 16 MB |
 | Work per message | a budget — a plugin that does not return is stopped with "did not finish in time" |
-| Messages while handling one | 256, then the plugin is stopped |
+| Messages while handling one | 256 — `send` and `log` together — then the plugin is stopped |
 
 One message is handled at a time. A module runs **only** while it is handling one, so there is no background loop: `host/timer` is a request answered once the time has passed, and answering it is all the plugin gets.
 

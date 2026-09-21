@@ -128,7 +128,7 @@ and imports, from the module named `agentty`:
 | `log(ptr: i32, len: i32)` | one line for the plugin's log |
 | `now_ms() -> i64` | milliseconds since the Unix epoch |
 
-Messages are the same JSON-RPC objects as over stdio, one per call, without the newline. **A module that imports anything else does not load.** Agentty also refuses a module larger than 64 MB, caps its memory at 64 MB, and gives each message a budget of work: a plugin that does not return is stopped with "did not finish in time", and one that sends more than 256 messages while handling a single one is stopped as well.
+Messages are the same JSON-RPC objects as over stdio, one per call, without the newline. **A module that imports anything else does not load.** Agentty also refuses a module larger than 64 MB, caps its memory at 64 MB, and gives each message a budget of work: a plugin that does not return is stopped with "did not finish in time", and one that sends more than 256 messages while handling a single one is stopped as well — `send` and `log` count together, so a loop that only logs is not free.
 
 The [Rust SDK](/docs/plugin-rust) hides all of this.
 
