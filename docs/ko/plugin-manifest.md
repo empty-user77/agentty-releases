@@ -45,11 +45,11 @@ description: agentty-plugin.json의 모든 필드 — 식별 정보, 실행 방�
 | 필드 | 기본값 | 설명 |
 |---|---|---|
 | `main` | 필수 | 플러그인 폴더 기준 진입점 |
-| `runtime` | `node` | `node`(로그인 셸 `PATH`의 Node.js 18+), `python`(`python3 <main>`), `executable`(`<main>`을 직접 실행) |
-| `apiVersion` | `1` | 작성 기준이 된 플러그인 API 버전 |
+| `runtime` | `node` | `node`(로그인 셸 `PATH`의 Node.js 18+), `python`(`python3 <main>`), `executable`(`<main>`을 직접 실행), 또는 `wasm` — `<main>`이 Agentty가 직접 실행하는 WebAssembly 모듈. [Rust와 WebAssembly](/docs/plugin-rust) 참고 |
+| `apiVersion` | `1` | 작성 기준이 된 플러그인 API 버전. `2`는 [AgentOS 플러그인](/docs/plugin-agentos)에 필요한 `host/timer`와 `pane/status`를 더합니다. 더 낮은 버전만 아는 Agentty는 실행할 수 없는 것을 설치하는 대신 그렇다고 알립니다 |
 | `activationEvents` | `[]` | `["onStartup"]`이면 Agentty와 함께 시작하고, 아니면 처음 사용할 때 시작 |
 
-Agentty는 플러그인 폴더를 작업 디렉터리로 삼아 프로그램을 실행합니다.
+Agentty는 플러그인 폴더를 작업 디렉터리로 삼아 프로그램을 실행합니다. `wasm` 플러그인은 프로그램을 시작하지 않습니다. 모듈이 Agentty 안에서 실행되며 작업 디렉터리도, 환경 변수도, 파일도 없습니다.
 
 ## 다른 앱과의 연동
 
@@ -61,11 +61,12 @@ Agentty는 플러그인 폴더를 작업 디렉터리로 삼아 프로그램을 
 ## 권한
 
 ```json
-"permissions": ["prompt.inject", "terminal.write", "session.read", "workspace.read"]
+"permissions": ["net.request", "prompt.inject", "terminal.write", "session.read", "workspace.read"]
 ```
 
 | 권한 | 허용되는 일 |
 |---|---|
+| `net.request` | 플러그인이 지정한 주소로 HTTP 요청 |
 | `prompt.inject` | 프롬프트 전송 |
 | `terminal.write` | 열린 페인에 입력 |
 | `session.read` | AI 대화 읽기 |
@@ -78,10 +79,29 @@ Agentty는 플러그인 폴더를 작업 디렉터리로 삼아 프로그램을 
 ### 패널
 
 ```json
-"contributes": { "panel": { "title": "Hello", "icon": "sparkles" } }
+"contributes": { "panel": { "title": "Hello", "icon": "sparkles", "surface": "sidebar", "mode": "push" } }
 ```
 
-탭 영역에 버튼이 생기고, 터미널 오른쪽에 패널이 붙습니다(폭 360px, 세로 스크롤). 플러그인이 UI 트리로 내용을 채웁니다 — [SDK](/docs/plugin-sdk) 참고.
+플러그인에 버튼과, UI 트리로 채우는 패널(너비 360px, 세로 스크롤)을 줍니다. [SDK](/docs/plugin-sdk)를 참고하세요.
+
+`surface`는 버튼이 놓이는 자리를 정합니다.
+
+| `surface` | 위치 |
+|---|---|
+| `pane`(기본) | 터미널 위 탭 영역 |
+| `sidebar` | 왼쪽 가장자리의 액티비티 바, Agentty 자체 페이지들과 나란히 |
+| `status` | 아래쪽 상태 바 |
+
+`mode`는 패널이 열리는 방식을 정합니다. 이용자가 패널의 레이아웃 버튼으로 바꿀 수 있고 그 선택이 유지됩니다. 처음 동작은 이렇습니다.
+
+| `mode` | |
+|---|---|
+| `push`(기본) | 터미널 옆에 도킹되고, 터미널이 자리를 비켜 줍니다 |
+| `overlay` | 창 오른쪽 가장자리에 떠 있고, 다른 것은 움직이지 않습니다 |
+| `window` | 독립된 창. 이동과 크기 조절이 가능합니다 |
+| `full` | 터미널과 페이지가 쓰는 영역 전체 |
+
+도킹된 패널이 나머지 창을 짓누를 만큼 커지지는 않습니다. 도킹 가능한 범위를 넘겨 끌면 떠 있는 패널이 됩니다.
 
 ### 명령
 
@@ -129,12 +149,12 @@ message-square minimize-2 minus network notebook notebook-pen package panel-left
 panel-left-open pencil picture-in-picture-2 play plug plus power puzzle refresh-cw rocket rotate-cw
 rows-2 save scroll-text search send settings shield-alert sparkles square square-plus
 square-terminal star sticky-note tag terminal trash-2 undo-2 unlink upload users wand-sparkles
-workflow wrench x zap git-fork file lock graduation-cap
+workflow wrench x zap git-fork file lock graduation-cap x-twitter
 ```
 
 ## 환경 변수
 
-플러그인 프로그램은 다음 환경 변수를 받습니다.
+프로그램으로 실행되는 플러그인(`node`, `python`, `executable`)은 다음 환경 변수를 받습니다. `wasm` 플러그인은 아무것도 받지 않고, 필요한 것을 [자신의 저장소](/docs/plugin-permissions)에 둡니다.
 
 | 변수 | 의미 |
 |---|---|
@@ -145,4 +165,4 @@ workflow wrench x zap git-fork file lock graduation-cap
 | `AGENTTY_LANGUAGE` | 이용자 언어 (`en`, `ko`, `ja`, `zh`) |
 | `AGENTTY_BIN` | `agentty` 명령줄 도구 경로 |
 
-저장할 것은 모두 `AGENTTY_PLUGIN_DATA` 안에 두세요.
+저장할 것은 모두 `AGENTTY_PLUGIN_DATA`에 두거나, 두 종류 모두에서 동작하는 `storage/*`를 쓰세요.

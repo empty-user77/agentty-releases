@@ -45,11 +45,11 @@ description: agentty-plugin.json 的所有字段 —— 标识信息、运行方
 | 字段 | 默认值 | 说明 |
 |---|---|---|
 | `main` | 必填 | 相对于插件文件夹的入口点 |
-| `runtime` | `node` | `node`（登录 shell `PATH` 中的 Node.js 18+）、`python`（`python3 <main>`）或 `executable`（直接运行 `<main>`） |
-| `apiVersion` | `1` | 编写时依据的插件 API 版本 |
+| `runtime` | `node` | `node`（登录 shell `PATH` 中的 Node.js 18+）、`python`（`python3 <main>`）、`executable`（直接运行 `<main>`），或 `wasm` —— `<main>` 是 Agentty 自己运行的 WebAssembly 模块，见 [Rust 与 WebAssembly](/docs/plugin-rust) |
+| `apiVersion` | `1` | 编写时依据的插件 API 版本。`2` 增加了 [AgentOS 插件](/docs/plugin-agentos)所需的 `host/timer` 和 `pane/status`。只懂旧版本的 Agentty 会直说，而不是安装一个自己跑不了的东西 |
 | `activationEvents` | `[]` | `["onStartup"]` 表示随 Agentty 一起启动，否则在首次使用时启动 |
 
-Agentty 以插件文件夹作为工作目录启动程序。
+Agentty 以插件文件夹作为工作目录启动程序。`wasm` 插件不启动任何程序：模块在 Agentty 内部运行，没有工作目录、没有环境变量、也没有文件。
 
 ## 与其他应用的集成
 
@@ -61,11 +61,12 @@ Agentty 以插件文件夹作为工作目录启动程序。
 ## 权限
 
 ```json
-"permissions": ["prompt.inject", "terminal.write", "session.read", "workspace.read"]
+"permissions": ["net.request", "prompt.inject", "terminal.write", "session.read", "workspace.read"]
 ```
 
 | 权限 | 允许的事 |
 |---|---|
+| `net.request` | 向插件指定的地址发送 HTTP 请求 |
 | `prompt.inject` | 发送提示词 |
 | `terminal.write` | 向已打开的窗格输入 |
 | `session.read` | 读取 AI 对话 |
@@ -78,10 +79,29 @@ Agentty 以插件文件夹作为工作目录启动程序。
 ### 面板
 
 ```json
-"contributes": { "panel": { "title": "Hello", "icon": "sparkles" } }
+"contributes": { "panel": { "title": "Hello", "icon": "sparkles", "surface": "sidebar", "mode": "push" } }
 ```
 
-会在标签栏添加按钮，并在终端右侧停靠一个面板（宽 360px，纵向滚动）。插件用 UI 树填充它 —— 参见 [SDK](/docs/plugin-sdk)。
+给插件一个按钮，以及一块由它用 UI 树填充的面板（宽 360 px，纵向滚动）。见 [SDK](/docs/plugin-sdk)。
+
+`surface` 决定按钮放在哪里：
+
+| `surface` | 位置 |
+|---|---|
+| `pane`（默认） | 终端上方的标签栏 |
+| `sidebar` | 左侧边缘的活动栏，与 Agentty 自己的页面并列 |
+| `status` | 底部的状态栏 |
+
+`mode` 决定面板怎么打开。用户可以用面板上的布局按钮更改，并且选择会被记住；这里说的是它一开始的行为：
+
+| `mode` | |
+|---|---|
+| `push`（默认） | 停靠在终端旁边，终端让出位置 |
+| `overlay` | 浮在窗口右侧边缘，其他东西不动 |
+| `window` | 独立窗口，可移动、可调整大小 |
+| `full` | 终端和页面所占的整个区域 |
+
+停靠的面板不会大到把窗口其余部分挤扁：拖过可停靠的范围，它就变成浮动面板。
 
 ### 命令
 
@@ -129,12 +149,12 @@ message-square minimize-2 minus network notebook notebook-pen package panel-left
 panel-left-open pencil picture-in-picture-2 play plug plus power puzzle refresh-cw rocket rotate-cw
 rows-2 save scroll-text search send settings shield-alert sparkles square square-plus
 square-terminal star sticky-note tag terminal trash-2 undo-2 unlink upload users wand-sparkles
-workflow wrench x zap git-fork file lock graduation-cap
+workflow wrench x zap git-fork file lock graduation-cap x-twitter
 ```
 
 ## 环境变量
 
-插件程序会收到以下环境变量：
+以程序方式运行的插件（`node`、`python`、`executable`）会收到以下环境变量。`wasm` 插件一个都收不到，它把需要的东西放在[自己的存储](/docs/plugin-permissions)里。
 
 | 变量 | 含义 |
 |---|---|
@@ -145,4 +165,4 @@ workflow wrench x zap git-fork file lock graduation-cap
 | `AGENTTY_LANGUAGE` | 用户语言（`en`、`ko`、`ja`、`zh`） |
 | `AGENTTY_BIN` | `agentty` 命令行工具的路径 |
 
-需要持久化的内容都请放在 `AGENTTY_PLUGIN_DATA` 里。
+需要持久化的内容请放在 `AGENTTY_PLUGIN_DATA` 里，或者放进两种插件都适用的 `storage/*`。

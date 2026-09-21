@@ -45,11 +45,11 @@ description: Every field of agentty-plugin.json — identity, runtime, permissio
 | Field | Default | Notes |
 |---|---|---|
 | `main` | required | Entry point, relative to the plugin folder |
-| `runtime` | `node` | `node` (Node.js 18+ from the login shell `PATH`), `python` (`python3 <main>`), or `executable` (`<main>` is run directly) |
-| `apiVersion` | `1` | The plugin API version the plugin was written for |
+| `runtime` | `node` | `node` (Node.js 18+ from the login shell `PATH`), `python` (`python3 <main>`), `executable` (`<main>` is run directly), or `wasm` — `<main>` is a WebAssembly module Agentty runs itself. See [Rust and WebAssembly](/docs/plugin-rust) |
+| `apiVersion` | `1` | The plugin API version the plugin was written for. `2` adds `host/timer` and `pane/status`, which [AgentOS plugins](/docs/plugin-agentos) need. An Agentty that speaks an older version says so instead of installing something it cannot run |
 | `activationEvents` | `[]` | `["onStartup"]` starts the plugin with Agentty; otherwise it starts on first use |
 
-Agentty starts the program with the plugin folder as its working directory.
+Agentty starts the program with the plugin folder as its working directory. A `wasm` plugin starts no program: the module runs inside Agentty and has no working directory, no environment and no files.
 
 ## Integration with another app
 
@@ -61,11 +61,12 @@ Agentty starts the program with the plugin folder as its working directory.
 ## Permissions
 
 ```json
-"permissions": ["prompt.inject", "terminal.write", "session.read", "workspace.read"]
+"permissions": ["net.request", "prompt.inject", "terminal.write", "session.read", "workspace.read"]
 ```
 
 | Permission | Allows |
 |---|---|
+| `net.request` | HTTP requests to addresses the plugin chooses |
 | `prompt.inject` | Sending prompts |
 | `terminal.write` | Typing into open panes |
 | `session.read` | Reading AI conversations |
@@ -78,10 +79,29 @@ Ask only for what you use — the list is shown to the user before installation.
 ### Panel
 
 ```json
-"contributes": { "panel": { "title": "Hello", "icon": "sparkles" } }
+"contributes": { "panel": { "title": "Hello", "icon": "sparkles", "surface": "sidebar", "mode": "push" } }
 ```
 
-Gives the plugin a button in the tab strip and a panel docked right of the terminals (360 px wide, scrolls vertically). The plugin fills it with a UI tree — see the [SDK](/docs/plugin-sdk).
+Gives the plugin a button and a panel it fills with a UI tree (360 px wide, scrolls vertically) — see the [SDK](/docs/plugin-sdk).
+
+`surface` picks where the button sits:
+
+| `surface` | Where |
+|---|---|
+| `pane` (default) | the tab strip above the terminals |
+| `sidebar` | the activity bar down the left edge, with Agentty's own pages |
+| `status` | the status bar along the bottom |
+
+`mode` picks how the panel opens. The user can change it from the panel's layout button and their choice is kept; this is what it does first:
+
+| `mode` | |
+|---|---|
+| `push` (default) | docked beside the terminals, which move over to make room |
+| `overlay` | floating above the window at its right edge; nothing else moves |
+| `window` | a window of its own, which can be moved and resized |
+| `full` | the whole area the terminals and pages use |
+
+A docked panel never takes so much room that the rest of the window is squeezed: dragged past what can be docked, it becomes an overlay.
 
 ### Commands
 
@@ -129,12 +149,12 @@ message-square minimize-2 minus network notebook notebook-pen package panel-left
 panel-left-open pencil picture-in-picture-2 play plug plus power puzzle refresh-cw rocket rotate-cw
 rows-2 save scroll-text search send settings shield-alert sparkles square square-plus
 square-terminal star sticky-note tag terminal trash-2 undo-2 unlink upload users wand-sparkles
-workflow wrench x zap git-fork file lock graduation-cap
+workflow wrench x zap git-fork file lock graduation-cap x-twitter
 ```
 
 ## Environment
 
-The plugin program gets these environment variables:
+A plugin that runs as a program (`node`, `python`, `executable`) gets these environment variables. A `wasm` plugin gets none — it keeps what it needs in [its own storage](/docs/plugin-permissions) instead.
 
 | Variable | Meaning |
 |---|---|
@@ -145,4 +165,4 @@ The plugin program gets these environment variables:
 | `AGENTTY_LANGUAGE` | The user's language (`en`, `ko`, `ja`, `zh`) |
 | `AGENTTY_BIN` | Path to the `agentty` command line helper |
 
-Keep everything you persist inside `AGENTTY_PLUGIN_DATA`.
+Keep everything you persist inside `AGENTTY_PLUGIN_DATA`, or in `storage/*`, which works for both kinds.

@@ -5,6 +5,9 @@ description: 핸들러, 호출, 패널 UI 빌더, 컨텍스트 객체 — agentt
 
 `agentty-plugin.mjs`는 의존성이 없는 파일 하나입니다. 타입 정의는 같은 위치의 `agentty-plugin.d.ts`에 있습니다. 플러그인 페이지에서 **개발자 가이드**를 누르면 둘 다 `~/.agentty/plugins/.sdk/`에 풀립니다.
 
+> [!NOTE]
+> 이렇게 만든 플러그인은 이용자 컴퓨터에서 프로그램으로 실행되며 `PATH`에 Node.js 18 이상이 필요하고, 폴더나 Git 저장소에서 설치됩니다. [마켓플레이스](/docs/plugin-publishing)는 WebAssembly 모듈만 받습니다. 그쪽은 [Rust와 WebAssembly](/docs/plugin-rust)를 보세요.
+
 ```js
 import { createPlugin, ui } from './agentty-plugin.mjs';
 
@@ -43,12 +46,16 @@ plugin.start();
 | `setBadge(text)` — 탭 영역 버튼에 최대 8자 | |
 | `getContext()` | |
 | `openUrl(url)` — http/https | |
+| `copy(text)` — 클립보드에 복사 | |
 | `revealPath(path)` — 파일 관리자에서 보기 | `workspace.read` |
 | `injectPrompt(request)` | `prompt.inject` |
 | `sendToTerminal({ paneId, text, submit })` | `terminal.write` |
 | `getSession({ paneId, maxTurns })` | `session.read` |
 | `listWorkspaces()` | `workspace.read` |
+| `fetch(request)` — HTTP 요청 | `net.request` |
 | `log(...)` — 플러그인 로그(stderr)에 기록 | |
+
+프로토콜에는 `storage/get`·`storage/set`·`storage/keys`(플러그인 자기 폴더의 JSON 문서. 권한 불필요)와, API 버전 2부터 `host/timer`·`pane/status`도 있습니다. Node 플러그인은 자기 파일을 써도 되지만 storage는 두 종류 모두에서 똑같이 동작합니다. [프로토콜](/docs/plugin-protocol)을 참고하세요.
 
 `plugin.info`에는 `initialize` 데이터가, `plugin.context`에는 최신 컨텍스트가 들어 있습니다.
 
@@ -62,7 +69,7 @@ plugin.start();
 | `ui.section(title, children)` | 제목이 있는 묶음 | |
 | `ui.text(text, style)` | `body`, `title`, `muted`, `small`, `code`, `error`, `success` | |
 | `ui.button(id, label, { icon, variant, disabled })` | `primary`, `secondary`, `ghost`, `danger` | `click` |
-| `ui.input(id, { placeholder, value })` | 한 줄 입력 | 입력이 멈추면 `change`, Enter에 `submit`. `event.value`가 텍스트 |
+| `ui.input(id, { placeholder, value, rows })` | 한 줄 입력, `rows`가 1보다 크면 그만큼의 텍스트 영역(최대 24) | 입력이 멈추면 `change`, Enter에 `submit`. `event.value`가 텍스트 |
 | `ui.list(id, items, { empty })` | 행 `{ id, title, subtitle, detail, icon, tone, actions }` | `event.item`과 함께 `select`, 행 버튼은 `event.item`·`event.action`과 함께 `action` |
 | `ui.choice(id, [{ value, label }], value)` | 분할 선택 | 값과 함께 `change` |
 | `ui.toggle(id, label, value)` | 스위치 | 새 불리언과 함께 `change` |

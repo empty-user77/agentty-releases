@@ -5,6 +5,9 @@ description: Handlers, calls, the panel UI builders and the context object — t
 
 `agentty-plugin.mjs` is a single file with no dependencies. Type definitions live next to it in `agentty-plugin.d.ts`. Press **Developer Guide** on the Plugins page to unpack both into `~/.agentty/plugins/.sdk/`.
 
+> [!NOTE]
+> A plugin written this way runs as a program on the user's machine, with Node.js 18+ on their `PATH`, and is installed from a folder or a Git repository. The [marketplace](/docs/plugin-publishing) lists WebAssembly modules only — for one of those, see [Rust and WebAssembly](/docs/plugin-rust).
+
 ```js
 import { createPlugin, ui } from './agentty-plugin.mjs';
 
@@ -43,12 +46,16 @@ Every call returns a promise.
 | `setBadge(text)` — up to 8 characters on the tab-strip button | |
 | `getContext()` | |
 | `openUrl(url)` — http/https | |
+| `copy(text)` — put text on the clipboard | |
 | `revealPath(path)` — show a file in the file manager | `workspace.read` |
 | `injectPrompt(request)` | `prompt.inject` |
 | `sendToTerminal({ paneId, text, submit })` | `terminal.write` |
 | `getSession({ paneId, maxTurns })` | `session.read` |
 | `listWorkspaces()` | `workspace.read` |
+| `fetch(request)` — an HTTP request | `net.request` |
 | `log(...)` — writes to the plugin log (stderr) | |
+
+The protocol also has `storage/get`, `storage/set` and `storage/keys` — a JSON document in the plugin's own folder, no permission needed — and, from API version 2, `host/timer` and `pane/status`. A Node plugin can write its own files instead, but storage works the same for both kinds. See [the protocol](/docs/plugin-protocol).
 
 `plugin.info` holds the data from `initialize`; `plugin.context` is the latest context.
 
@@ -62,7 +69,7 @@ The panel is 360 px wide and scrolls vertically. The plugin describes it as a tr
 | `ui.section(title, children)` | Titled group | |
 | `ui.text(text, style)` | `body`, `title`, `muted`, `small`, `code`, `error`, `success` | |
 | `ui.button(id, label, { icon, variant, disabled })` | `primary`, `secondary`, `ghost`, `danger` | `click` |
-| `ui.input(id, { placeholder, value })` | Single-line field | `change` after a pause, `submit` on Enter; `event.value` is the text |
+| `ui.input(id, { placeholder, value, rows })` | Single-line field, or a text area with `rows` > 1 (max 24) | `change` after a pause, `submit` on Enter; `event.value` is the text |
 | `ui.list(id, items, { empty })` | Rows `{ id, title, subtitle, detail, icon, tone, actions }` | `select` with `event.item`; row buttons send `action` with `event.item` and `event.action` |
 | `ui.choice(id, [{ value, label }], value)` | Segmented choice | `change` with the value |
 | `ui.toggle(id, label, value)` | Switch | `change` with the new boolean |
