@@ -160,4 +160,6 @@ divider  {}
 
 ## Agentty なしでテストする
 
-プラグインは stdin を読み stdout に書く普通のプログラムなので、テストから直接動かせます。`initialize` リクエストを書き、試したい通知を続けて送り、プラグインが返す JSON を検証してください。
+`node`・`python`・`executable` のプラグインは stdin を読み stdout に書く普通のプログラムなので、テストから直接動かせます。`initialize` リクエストを書き、試したい通知を続けて送り、プラグインが返す JSON を検証してください。
+
+`wasm` モジュールも同じやり方で、上の 3 つの import を用意できる WebAssembly ランタイムであれば動かせます。

@@ -160,4 +160,6 @@ divider  {}
 
 ## Agentty 없이 테스트하기
 
-플러그인은 stdin을 읽고 stdout에 쓰는 평범한 프로그램이므로 테스트에서 직접 구동할 수 있습니다. `initialize` 요청을 쓰고, 확인하고 싶은 알림을 이어서 보낸 뒤, 플러그인이 돌려주는 JSON을 검증하면 됩니다.
+`node`·`python`·`executable` 플러그인은 stdin을 읽고 stdout에 쓰는 평범한 프로그램이므로 테스트에서 직접 구동할 수 있습니다. `initialize` 요청을 쓰고, 확인하고 싶은 알림을 이어서 보낸 뒤, 플러그인이 돌려주는 JSON을 검증하면 됩니다.
+
+`wasm` 모듈도 방식은 같습니다. 위의 import 세 개를 제공할 수 있는 WebAssembly 런타임이면 무엇으로든 구동할 수 있습니다.

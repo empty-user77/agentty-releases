@@ -159,4 +159,6 @@ divider  {}
 
 ## 不用 Agentty 也能测试
 
-插件只是一个读取 stdin、写入 stdout 的普通程序，因此可以从测试中直接驱动：先写一个 `initialize` 请求，再发送你想验证的通知，然后对插件写回的 JSON 做断言。
+`node`、`python` 和 `executable` 插件就是读取 stdin、写入 stdout 的普通程序，因此可以从测试中直接驱动：先写一个 `initialize` 请求，再发送你想验证的通知，然后对插件写回的 JSON 做断言。
+
+`wasm` 模块也是同样的驱动方式，任何能提供上面那三个 import 的 WebAssembly 运行时都可以。
