@@ -80,7 +80,7 @@ description: 把插件登记到市场，或者自己以 Git 仓库、文件夹�
 | `apiVersion` | 模块面向的插件协议版本；为 `1` 时可省略 |
 | `surface` | 图标的位置：`sidebar`、`pane`（默认）或 `status` |
 | `mode` | 面板的打开方式：`push`（默认）、`overlay`、`window` 或 `full` |
-| `permissions` | 它申请的权限——安装前就会展示 |
+| `permissions` | 它申请的权限——安装前会展示，要求变多的更新会再展示一次 |
 | `module.url` | github.com 上的 `https://` 地址；必须含版本号，这样 release 无法被悄悄替换 |
 | `module.sha256` | 校验和；不匹配的下载会被拒绝 |
 | `module.size` | 字节数，最大 8 MB |
@@ -95,6 +95,8 @@ description: 把插件登记到市场，或者自己以 Git 仓库、文件夹�
 ### 更新
 
 改掉 `version`、`module.url`、`module.sha256` 和 `module.size`，再开一个 pull request。所有装了它的人都会收到更新提示。
+
+比已安装版本要求**更多**权限的更新，会说明多要了什么，并且需要再按一次。**全部更新**不会悄悄替你拿下这些，而是把它们留下并告诉你留了几个。所以扩大权限的代价，是失去那些不会再看一眼的用户——把描述写成值得他们再看一眼的样子。
 
 如果新版本用到了只有较新 Agentty 才有的东西，请把 `apiVersion` 一起调高。用旧版 Agentty 的人就会保留手里的版本并被提示更新，而不是拿到一个应用跑不起来的模块——Agentty 也不会把自己跑不了的版本算作已安装版本的更新。
 

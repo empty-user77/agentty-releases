@@ -10,8 +10,8 @@ What a plugin may do is declared in advance, in `agentty-plugin.json`, and shown
 | Permission | What the user is told | Method |
 |---|---|---|
 | `net.request` | Make HTTP requests to the addresses you give it | `net/fetch` |
-| `prompt.inject` | Start agent sessions or send prompts, after you pick where | `prompt/inject` |
-| `terminal.write` | Type into and submit prompts to open terminal panes directly | `terminal/send` |
+| `prompt.inject` | Start agent sessions and send them prompts | `prompt/inject` |
+| `terminal.write` | Type into terminals and press Enter | `terminal/send` |
 | `session.read` | Read the conversation of AI sessions open in Agentty | `session/get` |
 | `workspace.read` | See open workspaces, tabs, folders and agent status | `workspace/list`, `host/revealPath`, `pane/status` |
 
@@ -44,11 +44,16 @@ Context is filtered by what the plugin declared. Without `workspace.read`, folde
 }
 ```
 
-## The dialog is the boundary
+## Where a prompt goes, and who chose
 
-`prompt.inject` with `target: "ask"` opens **Send to…**: the user sees the text, picks the agent and the destination, and nothing happens until they press **Send**. Other targets skip that dialog, so a plugin acting on anything that came from outside should always use `ask`.
+The dialog is not a boundary, and it is worth being plain about that. `prompt.inject` lets a plugin **open an agent session of its own and send it text, without asking**. That is deliberate: an [AgentOS](/docs/plugin-agentos) is a plugin whose whole job is running steps through sessions it started, and it could not do that through a dialog.
 
-`injectPrompt` never presses Enter in a terminal. It types the text and leaves it to the user.
+A plugin **may** hand the choice to the user instead. `target: "ask"` opens **Send to…**: they see the text, pick the agent and the destination, and nothing happens until they press **Send**. Every other target — `newTab`, `newWorkspace`, `active`, `pane`, `workspace` — skips it. So a plugin acting on anything that came from outside should always use `ask`, and one a link reached has no say: Agentty routes it through the dialog whatever it asked for.
+
+The two calls differ on Enter, and the difference is the whole of `terminal.write`:
+
+- `injectPrompt` never presses Enter in a terminal. It types the text and leaves it to the user.
+- `sendToTerminal` is the other thing, and it **does** press Enter — in a shell as well, where that runs the command.
 
 ## Links are not trusted
 

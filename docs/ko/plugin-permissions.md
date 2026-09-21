@@ -10,8 +10,8 @@ description: 다섯 가지 권한, 권한이 없을 때 플러그인이 보는 �
 | 권한 | 이용자에게 표시되는 문구 | 메서드 |
 |---|---|---|
 | `net.request` | 지정한 주소로 HTTP 요청을 보냅니다 | `net/fetch` |
-| `prompt.inject` | 보낼 곳을 고르면 에이전트 세션을 시작하거나 프롬프트를 보냅니다 | `prompt/inject` |
-| `terminal.write` | 열려 있는 터미널 페인에 직접 입력하고 전송합니다 | `terminal/send` |
+| `prompt.inject` | 에이전트 세션 시작·프롬프트 전송 | `prompt/inject` |
+| `terminal.write` | 터미널에 입력하고 Enter까지 | `terminal/send` |
 | `session.read` | Agentty에 열린 AI 세션의 대화를 읽습니다 | `session/get` |
 | `workspace.read` | 열린 워크스페이스·탭·폴더와 에이전트 상태를 봅니다 | `workspace/list`, `host/revealPath`, `pane/status` |
 
@@ -44,11 +44,16 @@ description: 다섯 가지 권한, 권한이 없을 때 플러그인이 보는 �
 }
 ```
 
-## 다이얼로그가 경계입니다
+## 프롬프트가 어디로 가고, 누가 골랐는가
 
-`prompt.inject`를 `target: "ask"`로 호출하면 **보낼 곳…**이 열립니다. 이용자가 텍스트를 보고 에이전트와 목적지를 고르며, **보내기**를 누르기 전에는 아무 일도 일어나지 않습니다. 다른 target은 이 다이얼로그를 건너뛰므로, 외부에서 온 것을 받아 동작하는 플러그인은 항상 `ask`를 써야 합니다.
+다이얼로그는 경계가 아닙니다. 이 점은 분명히 해 둘 필요가 있습니다. `prompt.inject`는 플러그인이 **묻지 않고 자체 에이전트 세션을 열어 텍스트를 보낼 수 있게** 합니다. 의도된 설계입니다. [AgentOS](/docs/plugin-agentos)는 자기가 시작한 세션으로 단계를 진행하는 것이 일의 전부인 플러그인이고, 다이얼로그를 거쳐서는 그렇게 할 수 없습니다.
 
-`injectPrompt`는 터미널에서 Enter를 대신 누르지 않습니다. 텍스트를 입력해 두고 이용자에게 맡깁니다.
+플러그인이 선택을 이용자에게 넘길 **수도** 있습니다. `target: "ask"`로 호출하면 **보낼 곳…**이 열립니다. 이용자가 텍스트를 보고 에이전트와 목적지를 고르며, **보내기**를 누르기 전에는 아무 일도 일어나지 않습니다. 그 외의 target — `newTab`, `newWorkspace`, `active`, `pane`, `workspace` — 은 모두 이 다이얼로그를 건너뜁니다. 그러니 외부에서 온 것을 받아 동작하는 플러그인은 항상 `ask`를 써야 하고, 링크로 실행된 플러그인에는 선택권이 없습니다. 무엇을 요청했든 Agentty가 다이얼로그로 돌립니다.
+
+두 호출은 Enter에서 갈리고, 그 차이가 `terminal.write`의 전부입니다.
+
+- `injectPrompt`는 터미널에서 Enter를 대신 누르지 않습니다. 텍스트를 입력해 두고 이용자에게 맡깁니다.
+- `sendToTerminal`은 다른 물건이고, Enter를 **누릅니다**. 셸이라면 그 명령이 실행됩니다.
 
 ## 링크는 신뢰하지 않습니다
 

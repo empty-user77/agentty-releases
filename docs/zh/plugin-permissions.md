@@ -10,8 +10,8 @@ description: 五项权限、没有权限时插件能看到什么，以及为什�
 | 权限 | 展示给用户的说法 | 方法 |
 |---|---|---|
 | `net.request` | 向你给出的地址发送 HTTP 请求 | `net/fetch` |
-| `prompt.inject` | 在你选好去处后，启动智能体会话或发送提示词 | `prompt/inject` |
-| `terminal.write` | 直接往打开的终端窗格里输入并提交提示词 | `terminal/send` |
+| `prompt.inject` | 启动智能体会话并发送提示词 | `prompt/inject` |
+| `terminal.write` | 向终端输入并回车 | `terminal/send` |
 | `session.read` | 读取 Agentty 中已打开 AI 会话的对话 | `session/get` |
 | `workspace.read` | 查看打开的工作区、标签页、文件夹和智能体状态 | `workspace/list`、`host/revealPath`、`pane/status` |
 
@@ -44,11 +44,16 @@ description: 五项权限、没有权限时插件能看到什么，以及为什�
 }
 ```
 
-## 对话框就是边界
+## 提示词去了哪里，又是谁选的
 
-用 `target: "ask"` 调用 `prompt.inject` 会打开**发送到…**：用户看到文本，挑好智能体和去处，在按下**发送**之前什么都不会发生。其他 target 会跳过这个对话框，所以凡是依据外部输入行事的插件，都应该始终用 `ask`。
+对话框并不是边界，这一点值得说明白。`prompt.inject` 允许插件**不征求同意地开启自己的智能体会话并发送文本**。这是有意为之：[AgentOS](/docs/plugin-agentos) 的全部工作就是通过自己开启的会话推进步骤，隔着一个对话框是做不到的。
 
-`injectPrompt` 不会替你在终端里按回车。它把文本输进去，剩下的交给用户。
+插件**也可以**把选择权交给用户。用 `target: "ask"` 调用会打开**发送到…**：用户看到文本，挑好智能体和去处，在按下**发送**之前什么都不会发生。其余所有 target —— `newTab`、`newWorkspace`、`active`、`pane`、`workspace` —— 都会跳过它。所以凡是依据外部输入行事的插件都应该始终用 `ask`；而由链接触发的插件没得选：不管它请求什么，Agentty 都会把它转进对话框。
+
+这两个调用的分水岭是回车，而这个差别就是 `terminal.write` 的全部：
+
+- `injectPrompt` 不会替你在终端里按回车。它把文本输进去，剩下的交给用户。
+- `sendToTerminal` 是另一回事，它**会**按回车 —— 在 shell 里也一样，那就是执行命令。
 
 ## 链接不被信任
 

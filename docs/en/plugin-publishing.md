@@ -80,7 +80,7 @@ A plugin in the list is **a WebAssembly module with its source in the open**. Th
 | `apiVersion` | the plugin protocol the module is built against; leave it out for `1` |
 | `surface` | where its icon sits: `sidebar`, `pane` (default) or `status` |
 | `mode` | how its panel opens: `push` (default), `overlay`, `window` or `full` |
-| `permissions` | what it asks for — shown before anyone installs it |
+| `permissions` | what it asks for — shown before anyone installs it, and again on an update that asks for more |
 | `module.url` | `https://` on github.com; it must contain the version, so a release cannot be swapped underneath |
 | `module.sha256` | the checksum; Agentty refuses a download that does not match |
 | `module.size` | its size in bytes, 8 MB at most |
@@ -95,6 +95,8 @@ A plugin in the list is **a WebAssembly module with its source in the open**. Th
 ### Updating
 
 Change `version`, `module.url`, `module.sha256` and `module.size`, and open another pull request. Agentty offers the update to everyone who has it installed.
+
+An update that asks for **more** than the installed version says what it is adding and takes a second press. **Update all** leaves those out rather than taking them quietly, and says how many it left. So growing a plugin's permissions costs you the users who do not look again — write the description so that they do.
 
 If the new version uses something only a newer Agentty has, raise `apiVersion` with it. People on an older Agentty then keep the version they have and are told to update, instead of being handed a module their app cannot run — and Agentty does not count a version it cannot run as an update to one already installed.
 

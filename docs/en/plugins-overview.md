@@ -3,7 +3,7 @@ title: Plugins
 description: What plugins add to Agentty, installing them from the marketplace or your own folder, and what to check before you trust one.
 ---
 
-Plugins connect Agentty with other apps and add tools to your terminals. A plugin can put a **panel** next to your terminals, add **buttons** above agent panes, add entries to the **command palette**, and hand text to an agent as a **prompt** — always after you choose where it goes.
+Plugins connect Agentty with other apps and add tools to your terminals. A plugin can put a **panel** next to your terminals, add **buttons** above agent panes, add entries to the **command palette**, and hand text to an agent as a **prompt**. Where that prompt goes is the plugin's choice unless it asks you, so the permissions on its card are worth reading.
 
 Writing one? Start with the [plugin quick start](/docs/plugin-quickstart).
 
@@ -89,7 +89,9 @@ When a plugin, or a link from another app, sends a prompt, Agentty shows what wi
 - **New workspace** (with a folder you can change), **New tab** in the current workspace, or one of your **open workspaces** — an idle agent there receives it, otherwise a new agent tab opens
 - **Send right away**, or leave it unchecked to have the text typed in without pressing Enter
 
-Terminals only ever get the text typed in; Agentty never runs it for you. Nothing is sent until you press **Send**.
+Terminals only ever get the text typed in — Enter is never pressed for a prompt sent this way. Nothing is sent until you press **Send**.
+
+`terminal.write` is the other thing: a plugin holding it types into an open terminal **and presses Enter**, in a shell as well, where that runs the command. No dialog stands in front of that one, which is why the card names it separately.
 
 ## Links from other apps
 
