@@ -73,7 +73,7 @@ description: マーケットプレイスに登録するか、Git リポジトリ
 | フィールド | |
 |---|---|
 | `id` | 2〜40 文字の `a-z 0-9 -`。ファイルは `plugins/<id>.json` |
-| `name`, `version`, `description` | Agentty に表示されます。`version` は `major.minor.patch` |
+| `name`, `version`, `description` | Agentty に表示されます。`name` は 60 文字、`description` は 300 文字まで。`version` は `major.minor.patch` |
 | `publisher`, `license` | 作った人と、そのライセンス |
 | `source` | モジュールをビルドした公開リポジトリ — **必須** |
 | `homepage`, `keywords`, `icon` | 任意。アイコンは Agentty のアイコン集の名前 |
@@ -81,9 +81,9 @@ description: マーケットプレイスに登録するか、Git リポジトリ
 | `surface` | アイコンの位置: `sidebar`, `pane`（既定）, `status` |
 | `mode` | パネルの開き方: `push`（既定）, `overlay`, `window`, `full` |
 | `permissions` | 要求する権限。インストール前に示され、要求が増える更新でも再び示されます |
-| `module.url` | github.com 上の `https://`。バージョンを含む必要があり、リリースを裏で差し替えられません |
+| `module.url` | `github.com`・`raw.githubusercontent.com`・`objects.githubusercontent.com` のいずれかの `https://`。パスにバージョンを入れておけばリリースを裏で差し替えられません — 検査項目ではなく慣習です |
 | `module.sha256` | チェックサム。一致しないダウンロードは拒否されます |
-| `module.size` | バイト単位のサイズ、最大 8 MB |
+| `module.size` | バイト単位のサイズ — 概算ではなく**正確な**長さです。長さが違うダウンロードは拒否されます。最大 8 MB |
 
 ### 拒否されるもの
 

@@ -93,7 +93,7 @@ Agentty protects itself from a plugin behaving badly, whether or not it meant to
 | Limit | What happens |
 |---|---|
 | Panel redraws | at most one every 50 ms |
-| Notifications | at most one every 700 ms; the rest are answered normally and dropped |
+| Notifications | at most one every 700 ms; the rest are answered normally and dropped. A message is cut at 300 characters |
 | Opening a URL | at most one every 700 ms — `host/openUrl` is throttled like a notification |
 | Messages | more than 240 a second stops the plugin as a runaway |
 | UI tree | 2,000 elements, 12 levels deep, 20,000 characters per string. A `choice`'s options and a list item's buttons each count as elements |

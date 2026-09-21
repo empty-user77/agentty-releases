@@ -23,7 +23,7 @@ description: 把插件登记到市场，或者自己以 Git 仓库、文件夹�
 
 1. Agentty 通过 HTTPS 读取 `index.json`。每一条都会在这里重新检查——id、文案、权限、模块来自哪个主机。没通过的条目会被排除在清单之外，而不是照样显示。
 2. 插件页面会展示它是什么、源码在哪、许可证、模块大小和校验和，以及在权限之下用完整句子写明的**它能做什么**。
-3. 按下**安装**后，Agentty 下载模块并与那个校验和比对。不一致之前，插件文件夹里不会进入任何东西。
+3. 按下**安装**后，Agentty 下载模块，核对长度是否等于 `module.size`，与校验和比对，并确认这些字节确实是一个 WebAssembly 模块。三者都对上之前，插件文件夹里不会进入任何东西。
 
 ### 提交一个插件
 
@@ -73,7 +73,7 @@ description: 把插件登记到市场，或者自己以 Git 仓库、文件夹�
 | 字段 | |
 |---|---|
 | `id` | 2–40 个字符的 `a-z 0-9 -`；文件名为 `plugins/<id>.json` |
-| `name`、`version`、`description` | 在 Agentty 中展示；`version` 为 `major.minor.patch` |
+| `name`、`version`、`description` | 在 Agentty 中展示。`name` 最多 60 字符，`description` 最多 300，`version` 为 `major.minor.patch` |
 | `publisher`、`license` | 作者，以及许可证 |
 | `source` | 模块由之构建的公开仓库——**必填** |
 | `homepage`、`keywords`、`icon` | 可选；图标取自 Agentty 的图标集 |
@@ -81,9 +81,9 @@ description: 把插件登记到市场，或者自己以 Git 仓库、文件夹�
 | `surface` | 图标的位置：`sidebar`、`pane`（默认）或 `status` |
 | `mode` | 面板的打开方式：`push`（默认）、`overlay`、`window` 或 `full` |
 | `permissions` | 它申请的权限——安装前会展示，要求变多的更新会再展示一次 |
-| `module.url` | github.com 上的 `https://` 地址；必须含版本号，这样 release 无法被悄悄替换 |
+| `module.url` | `github.com`、`raw.githubusercontent.com` 或 `objects.githubusercontent.com` 上的 `https://` 地址。把版本放进路径，release 就无法被悄悄替换 —— 这是惯例，不是校验项 |
 | `module.sha256` | 校验和；不匹配的下载会被拒绝 |
-| `module.size` | 字节数，最大 8 MB |
+| `module.size` | 字节数 —— 必须是**精确**长度，不是估计值。长度对不上的下载会被拒绝。最大 8 MB |
 
 ### 什么会被拒绝
 

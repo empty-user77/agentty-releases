@@ -73,7 +73,7 @@ A plugin in the list is **a WebAssembly module with its source in the open**. Th
 | Field | |
 |---|---|
 | `id` | 2–40 characters, `a-z 0-9 -`; the file is `plugins/<id>.json` |
-| `name`, `version`, `description` | shown in Agentty; `version` is `major.minor.patch` |
+| `name`, `version`, `description` | shown in Agentty. `name` up to 60 characters, `description` up to 300, `version` is `major.minor.patch` |
 | `publisher`, `license` | who made it, and under what licence |
 | `source` | the public repository the module is built from — **required** |
 | `homepage`, `keywords`, `icon` | optional; the icon is a name from Agentty's set |
@@ -81,9 +81,9 @@ A plugin in the list is **a WebAssembly module with its source in the open**. Th
 | `surface` | where its icon sits: `sidebar`, `pane` (default) or `status` |
 | `mode` | how its panel opens: `push` (default), `overlay`, `window` or `full` |
 | `permissions` | what it asks for — shown before anyone installs it, and again on an update that asks for more |
-| `module.url` | `https://` on github.com; it must contain the version, so a release cannot be swapped underneath |
+| `module.url` | `https://` on `github.com`, `raw.githubusercontent.com` or `objects.githubusercontent.com`. Put the version in the path so a release cannot be swapped underneath — a convention, not a check |
 | `module.sha256` | the checksum; Agentty refuses a download that does not match |
-| `module.size` | its size in bytes, 8 MB at most |
+| `module.size` | its size in bytes — the **exact** length, not an estimate. A download of any other length is refused. 8 MB at most |
 
 ### What gets a plugin refused
 

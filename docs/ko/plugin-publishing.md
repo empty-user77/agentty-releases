@@ -73,7 +73,7 @@ description: 마켓플레이스에 플러그인을 등록하거나, Git 저장�
 | 필드 | |
 |---|---|
 | `id` | 2~40자의 `a-z 0-9 -`. 파일은 `plugins/<id>.json` |
-| `name`, `version`, `description` | Agentty에 표시됨. `version`은 `major.minor.patch` |
+| `name`, `version`, `description` | Agentty에 표시됨. `name`은 60자, `description`은 300자까지. `version`은 `major.minor.patch` |
 | `publisher`, `license` | 만든 사람과 라이선스 |
 | `source` | 모듈을 빌드한 공개 저장소 — **필수** |
 | `homepage`, `keywords`, `icon` | 선택. 아이콘은 Agentty 아이콘 집합의 이름 |
@@ -81,9 +81,9 @@ description: 마켓플레이스에 플러그인을 등록하거나, Git 저장�
 | `surface` | 아이콘 위치: `sidebar`, `pane`(기본), `status` |
 | `mode` | 패널이 열리는 방식: `push`(기본), `overlay`, `window`, `full` |
 | `permissions` | 요청하는 권한. 설치 전에 표시되고, 더 요구하는 업데이트에서 다시 표시됩니다 |
-| `module.url` | github.com의 `https://` 주소. 버전이 들어 있어야 하며, 그래야 릴리스를 몰래 바꿔치기할 수 없습니다 |
+| `module.url` | `github.com`, `raw.githubusercontent.com`, `objects.githubusercontent.com` 중 하나의 `https://` 주소. 경로에 버전을 넣어 두면 릴리스를 몰래 바꿔치기할 수 없습니다 — 검사 항목이 아니라 관례입니다 |
 | `module.sha256` | 체크섬. 일치하지 않는 다운로드는 거부됩니다 |
-| `module.size` | 바이트 단위 크기, 최대 8MB |
+| `module.size` | 바이트 단위 크기 — 어림값이 아니라 **정확한** 길이여야 합니다. 길이가 다르면 다운로드가 거부됩니다. 최대 8MB |
 
 ### 거부되는 경우
 
