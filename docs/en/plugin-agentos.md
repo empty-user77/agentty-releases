@@ -97,12 +97,15 @@ Every transition is a message the plugin already gets:
 | `pane/status` says that pane is `working` | remembers that the prompt has been taken up |
 | It says `finished` or `idle` after that | waits 2.5 s to see whether the stop lasts |
 | It is still stopped | `session/get`, then the step's check |
+| It goes back to work during those 2.5 s | what it had said was not its answer after all — back to waiting |
 | The check passes | keeps what it produced, and shows it or sends the next step |
 | The check fails | sends the agent what is missing — three times, then it stops and says why |
 | The agent asks for something, or its pane goes | the run stops and says so |
 | Agentty restarted | the run is read back from `storage` and asks its session again |
 
 The 2.5 s wait is not a guess. An agent between two tool calls is idle for a moment, and a session read in that moment gives back half a sentence and the tool it was about to run. A step that took that for its answer would move on having read nothing.
+
+The `working` row is there for the same reason. A pane is `idle` from the moment it opens, before the agent has picked the prompt up, so `idle` on its own never means finished — the run believes a stop only once it has seen that pane `working` at least once.
 
 ## The two rules
 
