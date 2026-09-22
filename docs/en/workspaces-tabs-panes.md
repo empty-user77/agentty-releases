@@ -32,6 +32,8 @@ New tabs start in the workspace's folder. **Settings → General** can ask for a
 
 Each agent pane has a status bar with the model, context window, rate-limit usage, branch and folder. Its position (above or below the terminal) and which items it shows are in **Settings → Appearance**.
 
+Double-click that bar — the status, or the icon it is dragged by — to give the pane the whole tab. Double-click again to put the split back the way it was.
+
 ## Side panels
 
 Panels dock beside the terminals and are resized by dragging their edge:
