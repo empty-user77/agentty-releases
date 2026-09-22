@@ -37,7 +37,13 @@ Agentty only ever removes trees under that folder. Worktrees you made yourself a
 
 **⌥⌘B** docks the project tree beside your terminals. It also lists **every working tree** of the project, who is working in each one, and what changed there.
 
-Right-click a tree to open a terminal in it, copy its path, or remove it (and its branch, once merged).
+Click a tree to see its files — and, when a session is already working in it, to go to that terminal.
+
+Right-click one for the rest: go to the terminal working there, open a new terminal, show the folder in the file manager, copy its path, or remove the tree. A tree whose folder you deleted by hand can be cleaned up from the same menu.
+
+Removing asks first. The dialog names the branch and says what goes with it: the working tree and its folder, and the local branch too when you picked **Remove working tree and branch**. If that branch was pushed, the dialog offers to delete it on the remote as well — the tick is off by default, and the remote branch only goes once the local one really went. Git decides what is safe either way: a tree with uncommitted changes stays, and so does a branch with commits nothing else has.
+
+A tree a tab is still working in is never removed: the menu leaves those entries out, and removing it any other way says so rather than asking. Close that tab first.
 
 ## Parallel tasks
 

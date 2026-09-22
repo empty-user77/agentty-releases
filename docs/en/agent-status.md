@@ -14,6 +14,12 @@ Agentty watches the agents you start and shows, for each one, whether it is work
 - **⇧⌘U** — jump to the most recent unread pane.
 - **Mini mode and the menu bar** — status without the window in front.
 
+## The context window
+
+The status bar's context figure is a meter: click it to open **Context memory**, which breaks the window down into system and tools, memory files, skills, the summary and the conversation, and says which files have been read or edited since the last compaction.
+
+Beside that figure the panel carries a **compact** button. It runs the agent's own compaction command (Claude Code and Codex), whatever the number says, so you can make room before a long turn instead of after one. The status bar grows its own compact button from 70% — the point where the meter turns orange.
+
 ## The states
 
 | State | Meaning |
