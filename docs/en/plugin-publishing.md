@@ -48,6 +48,13 @@ A plugin in the list is **a WebAssembly module with its source in the open**. Th
      "icon": "sparkles",
      "license": "MIT",
      "source": "https://github.com/you/agentty-hello-world",
+     "build": {
+       "repository": "https://github.com/you/agentty-hello-world",
+       "rev": "3f2b1c9e4a7d05b8c6e1f0a2d4b83c7e9015d6af",
+       "path": ".",
+       "toolchain": "1.98.1",
+       "artifact": "target/wasm32-unknown-unknown/release/hello_world.wasm"
+     },
      "keywords": ["example"],
      "apiVersion": 1,
      "surface": "sidebar",
@@ -61,12 +68,16 @@ A plugin in the list is **a WebAssembly module with its source in the open**. Th
    }
    ```
 
-3. **Check it, then open a pull request.** CI runs the same checks.
+3. **Check it, then open a pull request.** CI runs the same checks, and refuses the entry unless the entry, the module it points at and a fresh build of your source all agree.
 
    ```bash
-   python3 scripts/validate.py --download   # fetch the module and check its checksum
-   python3 scripts/validate.py --index      # rebuild index.json
+   python3 scripts/validate.py              # every entry's shape, hosts, permissions and build block
+   python3 scripts/validate.py --download   # also fetch each module and check its checksum
+   python3 scripts/validate.py --source     # also check the source is readable by anyone
+   python3 scripts/verify_build.py          # build your source again and compare it to the checksum
    ```
+
+`verify_build.py` needs Docker: it builds the module in a `rust` image pinned by digest, so the bytes do not depend on the machine that built them. That is what lets CI arrive at the same checksum you did.
 
 ### The entry's fields
 
@@ -75,19 +86,23 @@ A plugin in the list is **a WebAssembly module with its source in the open**. Th
 | `id` | 2–40 characters, `a-z 0-9 -`; the file is `plugins/<id>.json` |
 | `name`, `version`, `description` | shown in Agentty. `name` up to 60 characters, `description` up to 300, `version` is `major.minor.patch` |
 | `publisher`, `license` | who made it, and under what licence |
-| `source` | the public repository the module is built from — **required**. On `github.com`, `gitlab.com`, `codeberg.org` or `git.sr.ht`; it does not have to be GitHub |
+| `source` | the public repository the module is built from — **required**. On `github.com`, `gitlab.com`, `codeberg.org` or `git.sr.ht`; it does not have to be GitHub. It has to be the same repository as `build.repository`, so the code an entry links to is the code it ships |
+| `build` | **required** — how to build that module again: `repository` (the clone URL), `rev` (the full 40-character commit, not a tag or a branch, which can be moved afterwards), `path` (the plugin's directory in the repository, or `.`), `toolchain` (the Rust release the marketplace builds with) and `artifact` (the `.wasm` the build writes, relative to `path`). None of it is a command — what is run on it is fixed in `scripts/verify_build.py` |
 | `homepage`, `keywords`, `icon` | optional; the icon is a name from Agentty's set |
 | `apiVersion` | the plugin protocol the module is built against; leave it out for `1` |
 | `surface` | where its icon sits: `sidebar`, `pane` (default) or `status` |
 | `mode` | how its panel opens: `push` (default), `overlay`, `window` or `full` |
 | `permissions` | what it asks for — shown before anyone installs it, and again on an update that asks for more |
 | `module.url` | `https://` on `github.com`, `raw.githubusercontent.com` or `objects.githubusercontent.com`. Put the version in the path so a release cannot be swapped underneath — a convention, not a check |
-| `module.sha256` | the checksum; Agentty refuses a download that does not match |
-| `module.size` | its size in bytes — the **exact** length, not an estimate. A download of any other length is refused. 8 MB at most |
+| `module.sha256` | the checksum; Agentty refuses a download that does not match, and refuses bytes that are not a WebAssembly module even when it does |
+| `module.size` | its exact length in bytes, up to 8 MB. Not a ceiling: a download of any other length is refused, so this changes with every build |
+
+A listed plugin carries no logo of its own in the entry. If you want artwork instead of an icon, put it in the module's `agentty.logo` section — it is then covered by `module.sha256` like everything else, and nothing is fetched from your server when somebody installs the plugin. See [Logo](/docs/plugin-rust#logo).
 
 ### What gets a plugin refused
 
-- A module that is not built from the repository in `source`, or a repository nobody can read.
+- A module CI cannot arrive at again by building `build.repository` at `build.rev`, or a repository nobody can read.
+- A manifest at `build.path` that disagrees with the entry — a different id, version, `apiVersion` or set of permissions.
 - A checksum that does not match what the URL serves.
 - Permissions the plugin does not use, or a description that does not say what it does with them.
 - Anything that pretends to be another plugin, another publisher, or Agentty itself.
