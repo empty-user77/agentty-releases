@@ -20,7 +20,7 @@ description: Every field of agentty-plugin.json — identity, runtime, permissio
   "contributes": {
     "panel": { "title": "Hello", "icon": "sparkles" },
     "commands": [
-      { "id": "hello.explain", "title": "Hello: Explain this folder", "icon": "bot", "paneBar": true }
+      { "id": "hello.explain", "title": "Hello: Explain this folder", "icon": "bot" }
     ]
   }
 }
@@ -39,6 +39,7 @@ description: Every field of agentty-plugin.json — identity, runtime, permissio
 | `keywords` | | For search in the store |
 | `links` | | Up to 6 `{ "label", "url" }` (https) shown as buttons on the card — project site, docs, source |
 | `icon` | | An icon name from the list below |
+| `logo` | | A picture file inside the plugin folder, drawn instead of `icon`. A module carries its logo in the module — see [Logo](#logo) |
 
 ## Running
 
@@ -113,8 +114,6 @@ A docked panel never takes so much room that the rest of the window is squeezed:
       "title": "Hello: Explain this folder",
       "description": "Sends a tour request to the focused agent",
       "icon": "bot",
-      "paneBar": true,
-      "when": "agent",
       "palette": true
     }
   ]
@@ -126,12 +125,10 @@ A docked panel never takes so much room that the rest of the window is squeezed:
 | `id` | Unique within the plugin; the SDK registers handlers by this id |
 | `title` | Shown in the palette; prefix it with the plugin name so it groups well |
 | `description` | Optional second line |
-| `icon` | Icon name for the pane-bar button |
-| `paneBar` | `true` adds an icon button to the status bar above Claude Code / Codex panes and to split-pane headers |
-| `when` | Limits the pane-bar button to `agent` panes, `shell` panes, or `always` |
+| `icon` | Icon name shown beside the command in the palette |
 | `palette` | `false` hides it from the command palette |
 
-A pane-bar command receives the context of the pane whose button was pressed, not the focused pane.
+Commands are reached from the command palette. `paneBar` and `when` are gone: a manifest that still carries them installs and runs as before and the two fields are ignored — but a plugin built around those buttons no longer has them, and its commands are reached from the palette instead.
 
 ## Icons
 
@@ -151,6 +148,23 @@ rows-2 save scroll-text search send settings shield-alert sparkles square square
 square-terminal star sticky-note tag terminal trash-2 undo-2 unlink upload users wand-sparkles
 workflow wrench x zap git-fork file lock graduation-cap x-twitter
 ```
+
+## Logo
+
+A logo is the plugin's own artwork, drawn instead of the `icon` name in the store list, on the detail card and on the panel button.
+
+**A logo is never fetched from anywhere.** It travels with the plugin, so the picture on screen is the picture the user installed — and putting a logo on a plugin tells its author nothing about who installed it.
+
+| Kind of plugin | Where its logo lives |
+|---|---|
+| A folder — `node`, `python`, `executable`, or a linked development folder | `"logo": "logo.png"`, a file inside the plugin folder |
+| One `wasm` module — everything that comes from the store | The module carries the picture itself. `logo` is not used; see [Rust and WebAssembly](/docs/plugin-rust#logo) |
+
+As a manifest field, `logo` is a file name and nothing else. A path that climbs out of the plugin folder (`../`), an absolute path, anything carrying a scheme — an `https://` address included — and anything longer than 400 characters are all refused, and the plugin keeps its `icon`.
+
+A picture carried in a module has to be a **PNG, JPEG, GIF or WebP**, really of that kind — the bytes are checked, not the name — and 512 KB at most. Anything else is no logo, and the plugin keeps its `icon`.
+
+**A module's logo is never an SVG**, whatever it is called. An SVG is a document rather than a picture: the renderer resolves the addresses written inside it, so a local path there would be opened and drawn. A plugin must not be able to put one of the user's own files on screen by calling it a logo.
 
 ## Environment
 

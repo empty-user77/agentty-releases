@@ -25,7 +25,7 @@ plugin.start();
 | ハンドラ | 呼ばれるとき |
 |---|---|
 | `onActivate(info => …)` | プラグインが起動した。`info` に `plugin.dataDir`、`language`、`context` |
-| `command(id, ({ context, args }) => …)` | パレットやペインバーのボタンからコマンドが実行された |
+| `command(id, ({ context, args }) => …)` | コマンドパレットからコマンドが実行された |
 | `onPanelOpen(context => …)` | パネルが表示された — ここで描画します |
 | `onPanelClose(context => …)` | パネルが隠れた |
 | `onEvent(elementId, (event, context) => …)` | その id の UI 要素が使われた |

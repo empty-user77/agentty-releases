@@ -15,7 +15,11 @@ An imported theme is referenced by its file name without the extension.
 
 JetBrains Mono is bundled, along with a Nerd Font–patched version, so Powerlevel10k and Starship prompts render without installing anything. Any monospace font on your system can be used instead.
 
-Font size, line height and padding are set on the same page. **⌘= / ⌘- / ⌘0** zoom the font in the current pane.
+Font size, line height, padding, letter spacing (0–8 points of extra width per cell) and bold text are set on the same page. **⌘= / ⌘- / ⌘0** zoom the font in the current pane.
+
+## Colours of your own
+
+Background, text, cursor and selection can each be replaced without leaving the theme — the rest of it stays as it is, and **Theme's own** puts a colour back. The preview under the settings shows every change at once.
 
 ## Cursor and scrollback
 
@@ -23,6 +27,6 @@ Cursor shape (block, beam, underline) and blinking, and how many lines of scroll
 
 ## The agent status bar
 
-Which items appear above an AI pane, and in what order: model, context window, usage, status, elapsed time, links, ports, plugins, worktree, branch, folder. Model, context, status and branch cannot be hidden.
+Which items appear above an AI pane, and in what order: model, context window, usage, status, elapsed time, links, ports, worktree, branch, folder. Model, context, status and branch cannot be hidden.
 
 Its position — above the terminal or below it — is on the same page.

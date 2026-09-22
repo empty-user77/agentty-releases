@@ -48,6 +48,13 @@ description: マーケットプレイスに登録するか、Git リポジトリ
      "icon": "sparkles",
      "license": "MIT",
      "source": "https://github.com/you/agentty-hello-world",
+     "build": {
+       "repository": "https://github.com/you/agentty-hello-world",
+       "rev": "3f2b1c9e4a7d05b8c6e1f0a2d4b83c7e9015d6af",
+       "path": ".",
+       "toolchain": "1.98.1",
+       "artifact": "target/wasm32-unknown-unknown/release/hello_world.wasm"
+     },
      "keywords": ["example"],
      "apiVersion": 1,
      "surface": "sidebar",
@@ -61,12 +68,16 @@ description: マーケットプレイスに登録するか、Git リポジトリ
    }
    ```
 
-3. **検査してからプルリクエストを開きます。** CI が同じ検査を走らせます。
+3. **検査してからプルリクエストを開きます。** CI が同じ検査を走らせ、項目と、それが指すモジュールと、ソースを build し直した結果がすべて一致しなければ拒否します。
 
    ```bash
-   python3 scripts/validate.py --download   # モジュールを取得してチェックサムを確認
-   python3 scripts/validate.py --index      # index.json を再生成
+   python3 scripts/validate.py              # 全項目の形式・ホスト・権限・ビルドブロック
+   python3 scripts/validate.py --download   # 各モジュールを取得してチェックサムも確認
+   python3 scripts/validate.py --source     # ソースが誰でも読めるかも確認
+   python3 scripts/verify_build.py          # ソースをビルドし直してチェックサムと照合
    ```
+
+`verify_build.py` には Docker が必要です。ダイジェストで固定した `rust` イメージの中でモジュールをビルドするので、ビルドした機械によってバイトが変わりません。CI があなたと同じチェックサムにたどり着けるのはそのためです。
 
 ### 項目のフィールド
 
@@ -75,19 +86,23 @@ description: マーケットプレイスに登録するか、Git リポジトリ
 | `id` | 2〜40 文字の `a-z 0-9 -`。ファイルは `plugins/<id>.json` |
 | `name`, `version`, `description` | Agentty に表示されます。`name` は 60 文字、`description` は 300 文字まで。`version` は `major.minor.patch` |
 | `publisher`, `license` | 作った人と、そのライセンス |
-| `source` | モジュールをビルドした公開リポジトリ — **必須**。`github.com`・`gitlab.com`・`codeberg.org`・`git.sr.ht` のいずれかで、GitHub である必要はありません |
+| `source` | モジュールをビルドした公開リポジトリ — **必須**。`github.com`・`gitlab.com`・`codeberg.org`・`git.sr.ht` のいずれかで、GitHub である必要はありません。`build.repository` と同じリポジトリであること — 項目がリンクするコードが、実際に配布されるコードであるためです |
+| `build` | **必須** — そのモジュールをもう一度ビルドする方法。`repository`（クローン URL）、`rev`（40 文字のコミット全体。あとで動かせるタグやブランチは不可）、`path`（リポジトリ内のプラグインのディレクトリ、または `.`）、`toolchain`（マーケットプレイスがビルドに使う Rust リリース）、`artifact`（ビルドが書き出す `.wasm`、`path` からの相対）。どれもコマンドではありません — 何を実行するかは `scripts/verify_build.py` に固定されています |
 | `homepage`, `keywords`, `icon` | 任意。アイコンは Agentty のアイコン集の名前 |
 | `apiVersion` | モジュールが対象とするプラグインプロトコル。`1` なら省略 |
 | `surface` | アイコンの位置: `sidebar`, `pane`（既定）, `status` |
 | `mode` | パネルの開き方: `push`（既定）, `overlay`, `window`, `full` |
 | `permissions` | 要求する権限。インストール前に示され、要求が増える更新でも再び示されます |
 | `module.url` | `github.com`・`raw.githubusercontent.com`・`objects.githubusercontent.com` のいずれかの `https://`。パスにバージョンを入れておけばリリースを裏で差し替えられません — 検査項目ではなく慣習です |
-| `module.sha256` | チェックサム。一致しないダウンロードは拒否されます |
-| `module.size` | バイト単位のサイズ — 概算ではなく**正確な**長さです。長さが違うダウンロードは拒否されます。最大 8 MB |
+| `module.sha256` | チェックサム。一致しないダウンロードは拒否され、一致していても WebAssembly モジュールでないバイトは拒否されます |
+| `module.size` | バイト単位の正確な長さ。最大 8 MB。上限ではなく正確な値です — 長さが違うダウンロードは拒否されるので、ビルドのたびに変わります |
+
+掲載されるプラグインは、項目の中にロゴを持ちません。アイコンの代わりに画像を使いたい場合は、モジュールの `agentty.logo` セクションに入れてください。そうすれば他の部分と同じく `module.sha256` に含まれ、誰かがインストールしても発行者のサーバーへは何のリクエストも飛びません。[ロゴ](/docs/plugin-rust#ロゴ)を参照。
 
 ### 拒否されるもの
 
-- `source` のリポジトリからビルドされていないモジュール、または誰も読めないリポジトリ。
+- `build.repository` を `build.rev` でビルドし直しても CI が同じバイトにたどり着けないモジュール、または誰も読めないリポジトリ。
+- `build.path` のマニフェストが項目と食い違う場合 — id・バージョン・`apiVersion`・権限の一覧が違う場合。
 - URL が配るものとチェックサムが一致しないもの。
 - 使わない権限を求めるもの、あるいはその権限で何をするか説明にないもの。
 - 他のプラグイン、他の配布者、または Agentty 自身になりすますもの。

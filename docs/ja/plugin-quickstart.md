@@ -112,7 +112,7 @@ SDK は依存のないファイル 1 つです。プラグインページで**�
   "permissions": ["prompt.inject"],
   "contributes": {
     "panel": { "title": "Hello", "icon": "sparkles" },
-    "commands": [{ "id": "hello.explain", "title": "Hello: Explain this folder", "icon": "bot", "paneBar": true }]
+    "commands": [{ "id": "hello.explain", "title": "Hello: Explain this folder", "icon": "bot" }]
   }
 }
 ```
@@ -148,7 +148,7 @@ function explain(context) {
 
 ## インストールする
 
-**プラグイン → フォルダからインストール…** でフォルダを選ぶか、**開発用フォルダをリンク…** でその場所のまま動かします。そのあと**再読み込み**すれば（あるいはページを開き直せば）プラグインがインストール済みとして現れ、パネルのボタンは `surface` が指す場所に、コマンドはパレット（⇧⌘P）とターミナルペインの上に現れます。
+**プラグイン → フォルダからインストール…** でフォルダを選ぶか、**開発用フォルダをリンク…** でその場所のまま動かします。そのあと**再読み込み**すれば（あるいはページを開き直せば）プラグインがインストール済みとして現れ、パネルのボタンは `surface` が指す場所に、コマンドはパレット（⇧⌘P）に現れます。
 
 ## テストする
 

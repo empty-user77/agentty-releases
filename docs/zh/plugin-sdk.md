@@ -25,7 +25,7 @@ plugin.start();
 | 处理器 | 触发时机 |
 |---|---|
 | `onActivate(info => …)` | 插件已启动；`info` 中有 `plugin.dataDir`、`language`、`context` |
-| `command(id, ({ context, args }) => …)` | 命令从命令面板或窗格栏按钮被执行 |
+| `command(id, ({ context, args }) => …)` | 命令从命令面板被执行 |
 | `onPanelOpen(context => …)` | 面板变为可见 —— 在这里绘制 |
 | `onPanelClose(context => …)` | 面板被隐藏 |
 | `onEvent(elementId, (event, context) => …)` | 该 id 的 UI 元素被操作 |

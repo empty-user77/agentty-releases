@@ -112,7 +112,7 @@ SDK는 의존성 없는 파일 하나입니다. 플러그인 페이지에서 **�
   "permissions": ["prompt.inject"],
   "contributes": {
     "panel": { "title": "Hello", "icon": "sparkles" },
-    "commands": [{ "id": "hello.explain", "title": "Hello: Explain this folder", "icon": "bot", "paneBar": true }]
+    "commands": [{ "id": "hello.explain", "title": "Hello: Explain this folder", "icon": "bot" }]
   }
 }
 ```
@@ -148,7 +148,7 @@ function explain(context) {
 
 ## 설치하기
 
-**플러그인 → 폴더에서 설치…** 로 폴더를 고르거나, **개발용 폴더 연결…** 로 있는 자리에서 실행합니다. 그다음 **새로 고침**하면(또는 페이지를 다시 열면) 플러그인이 설치된 것으로 나타납니다. 패널 버튼은 `surface`가 가리키는 자리에, 명령은 팔레트(⇧⌘P)와 터미널 페인 위에 나타납니다.
+**플러그인 → 폴더에서 설치…** 로 폴더를 고르거나, **개발용 폴더 연결…** 로 있는 자리에서 실행합니다. 그다음 **새로 고침**하면(또는 페이지를 다시 열면) 플러그인이 설치된 것으로 나타납니다. 패널 버튼은 `surface`가 가리키는 자리에, 명령은 팔레트(⇧⌘P)에 나타납니다.
 
 ## 테스트하기
 

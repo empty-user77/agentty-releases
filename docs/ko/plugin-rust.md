@@ -109,6 +109,20 @@ cp target/wasm32-unknown-unknown/release/hello.wasm hello.wasm
 
 모듈을 `agentty-plugin.json` 옆에 두고 **플러그인 → 폴더에서 설치…** 로 그 폴더를 고릅니다. 새로 빌드한 뒤에는 플러그인 페이지의 **재시작**으로 반영합니다.
 
+## 로고
+
+모듈에는 그림을 담을 파일 폴더가 없으므로, 모듈이 직접 그림을 들고 다닙니다. WebAssembly 커스텀 섹션 `agentty.logo`입니다. 엔진은 이 섹션을 무시하고, 마켓플레이스 엔트리의 체크섬이 이미 이 영역을 덮습니다 — 로고도 모듈의 나머지와 똑같이 리뷰된 바이트입니다. Rust에서는 static 하나입니다:
+
+```rust
+#[used]
+#[link_section = "agentty.logo"]
+static LOGO: [u8; 1234] = *include_bytes!("logo.png");
+```
+
+`#[used]`는 선택이 아닙니다. 아무것도 참조하지 않는 static은 릴리스 빌드에서 제거되고, 섹션도 함께 사라집니다. 배열 길이는 파일 크기와 같아야 합니다.
+
+바이트는 512KB 이하의 PNG, JPEG, GIF, WebP여야 하며 설치할 때 확인합니다. SVG는 어떤 이름을 달고 있든 거부됩니다 — [로고](/docs/plugin-manifest#로고) 참고. Agentty는 설치 시점에 그림을 파일로 써 두므로, 목록을 그릴 때마다 모듈을 파싱하지 않습니다.
+
 ## 제한
 
 | | |

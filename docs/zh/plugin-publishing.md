@@ -48,6 +48,13 @@ description: 把插件登记到市场，或者自己以 Git 仓库、文件夹�
      "icon": "sparkles",
      "license": "MIT",
      "source": "https://github.com/you/agentty-hello-world",
+     "build": {
+       "repository": "https://github.com/you/agentty-hello-world",
+       "rev": "3f2b1c9e4a7d05b8c6e1f0a2d4b83c7e9015d6af",
+       "path": ".",
+       "toolchain": "1.98.1",
+       "artifact": "target/wasm32-unknown-unknown/release/hello_world.wasm"
+     },
      "keywords": ["example"],
      "apiVersion": 1,
      "surface": "sidebar",
@@ -61,12 +68,16 @@ description: 把插件登记到市场，或者自己以 Git 仓库、文件夹�
    }
    ```
 
-3. **先检查，再开 pull request。** CI 会跑同样的检查。
+3. **先检查，再开 pull request。** CI 会跑同样的检查，并且只有条目、它所指向的模块，以及重新构建你的源码这三者一致时才会通过。
 
    ```bash
-   python3 scripts/validate.py --download   # 下载模块并核对校验和
-   python3 scripts/validate.py --index      # 重新生成 index.json
+   python3 scripts/validate.py              # 每个条目的结构、主机、权限和 build 块
+   python3 scripts/validate.py --download   # 同时下载每个模块并核对校验和
+   python3 scripts/validate.py --source     # 同时检查源码是否人人可读
+   python3 scripts/verify_build.py          # 重新构建你的源码，与校验和比对
    ```
+
+`verify_build.py` 需要 Docker：模块在按摘要固定的 `rust` 镜像中构建，因此字节不依赖于构建它的机器。这正是 CI 能得出与你相同校验和的原因。
 
 ### 条目里的字段
 
@@ -75,19 +86,23 @@ description: 把插件登记到市场，或者自己以 Git 仓库、文件夹�
 | `id` | 2–40 个字符的 `a-z 0-9 -`；文件名为 `plugins/<id>.json` |
 | `name`、`version`、`description` | 在 Agentty 中展示。`name` 最多 60 字符，`description` 最多 300，`version` 为 `major.minor.patch` |
 | `publisher`、`license` | 作者，以及许可证 |
-| `source` | 模块由之构建的公开仓库——**必填**。可以在 `github.com`、`gitlab.com`、`codeberg.org` 或 `git.sr.ht`，不一定要是 GitHub |
+| `source` | 模块由之构建的公开仓库——**必填**。可以在 `github.com`、`gitlab.com`、`codeberg.org` 或 `git.sr.ht`，不一定要是 GitHub。它必须与 `build.repository` 是同一个仓库，这样条目链接的代码就是它实际发布的代码 |
+| `build` | **必填** —— 如何再次构建该模块：`repository`（克隆地址）、`rev`（完整的 40 位提交，不能是之后可被移动的标签或分支）、`path`（插件在仓库中的目录，或 `.`）、`toolchain`（市场用来构建的 Rust 版本）和 `artifact`（构建写出的 `.wasm`，相对于 `path`）。其中没有任何一项是命令 —— 执行什么固定写在 `scripts/verify_build.py` 里 |
 | `homepage`、`keywords`、`icon` | 可选；图标取自 Agentty 的图标集 |
 | `apiVersion` | 模块面向的插件协议版本；为 `1` 时可省略 |
 | `surface` | 图标的位置：`sidebar`、`pane`（默认）或 `status` |
 | `mode` | 面板的打开方式：`push`（默认）、`overlay`、`window` 或 `full` |
 | `permissions` | 它申请的权限——安装前会展示，要求变多的更新会再展示一次 |
 | `module.url` | `github.com`、`raw.githubusercontent.com` 或 `objects.githubusercontent.com` 上的 `https://` 地址。把版本放进路径，release 就无法被悄悄替换 —— 这是惯例，不是校验项 |
-| `module.sha256` | 校验和；不匹配的下载会被拒绝 |
-| `module.size` | 字节数 —— 必须是**精确**长度，不是估计值。长度对不上的下载会被拒绝。最大 8 MB |
+| `module.sha256` | 校验和；不匹配的下载会被拒绝，即使匹配，不是 WebAssembly 模块的字节也会被拒绝 |
+| `module.size` | 以字节为单位的精确长度，最大 8 MB。它不是上限而是精确值 —— 长度不符的下载会被拒绝，所以每次构建都会变 |
+
+上架的插件不会在条目里携带徽标。如果想用图片代替图标，请把它放进模块的 `agentty.logo` 段 —— 这样它就和其余部分一样被 `module.sha256` 覆盖，而且别人安装插件时不会向你的服务器发出任何请求。见[徽标](/docs/plugin-rust#徽标)。
 
 ### 什么会被拒绝
 
-- 并非由 `source` 所指仓库构建的模块，或者谁都读不到的仓库。
+- CI 按 `build.rev` 重新构建 `build.repository` 也得不到同样字节的模块，或者谁都读不到的仓库。
+- `build.path` 处的清单与条目不一致 —— id、版本、`apiVersion` 或权限列表不同。
 - 校验和与该 URL 提供的内容不一致。
 - 申请了用不到的权限，或者描述里没写清楚拿这些权限做什么。
 - 冒充别的插件、别的发布者，或者冒充 Agentty 本身。

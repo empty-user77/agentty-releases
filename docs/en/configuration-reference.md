@@ -51,6 +51,9 @@ Secrets are never in these files. They live in the operating system's credential
 | `theme` | A built-in theme name, or an imported `.itermcolors` file name without the extension |
 | `fontFamily`, `fontSize`, `lineHeight`, `padding` | Appearance |
 | `cursorShape` | `block`, `beam`, `underline`; `cursorBlink` toggles blinking |
+| `letterSpacing` | Extra width added to every terminal cell, in points (0–8) |
+| `boldText` | Draws ordinary terminal text at bold weight; what the agent marks bold goes heavier still |
+| `colorBackground`, `colorForeground`, `colorCursor`, `colorSelection` | Theme colours replaced by hand, as a `0xRRGGBB` number — JSON has no hex literal, so `0x121212` is written `1184274`. Left out: the theme's own |
 | `scrollback` | Lines kept per terminal |
 | `askDirectory` | Ask for a folder for new workspaces; `askDirectoryForTabs` does the same for tabs |
 | `resumeBar` | Offer earlier sessions when a terminal enters their folder |
@@ -60,12 +63,16 @@ Secrets are never in these files. They live in the operating system's credential
 | `stopServersOnClose` | Closing a pane stops the servers started in it |
 | `confirmClose` | Ask before closing something that was used |
 | `agentBarPosition` | `top` or `bottom` |
-| `hud` | Status bar items in order: `model`, `context`, `usage`, `status`, `elapsed`, `links`, `spacer`, `ports`, `plugins`, `worktree`, `branch`, `folder` |
+| `workspaceSearchBar` | Search box above the workspace list, over names and the conversations held in them (on by default) |
+| `sortFinishedToTop` | Move a workspace to the top when its agent finishes (off by default; off keeps the order you arranged yourself) |
+| `hud` | Status bar items in order: `model`, `context`, `usage`, `status`, `elapsed`, `links`, `spacer`, `ports`, `worktree`, `branch`, `folder` |
 | `browser.autoOpenServers` | Open a dev server in the in-app browser once it answers |
 | `linkOpener` | Whether ⌘-click opens links in-app or in your default browser |
 | `externalEditor` | `auto`, `vsCode`, `cursor`, `system` |
 | `harnessDetect`, `harnessPatterns`, `harnessSubmit`, `harnessAgent` | Harness detection and behavior |
 | `systemNotifications`, `notifyWhenFocused`, `notifyAnswerRequests`, `chatNotify` | Notifications |
+| `chatNotify.slackBot`, `chatNotify.discordBot` | Send through a bot token and a channel instead of a webhook URL |
+| `chatNotify.slackChannel`, `chatNotify.discordChannel` | The channel a bot writes to — Slack takes `#general`, `general` or a channel id; Discord takes a channel id |
 | `analytics` | Consent to anonymous usage statistics. `false`, or `DO_NOT_TRACK=1`, sends nothing |
 | `menuBar` | Menu bar icon (macOS) |
 

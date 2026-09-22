@@ -48,6 +48,13 @@ description: 마켓플레이스에 플러그인을 등록하거나, Git 저장�
      "icon": "sparkles",
      "license": "MIT",
      "source": "https://github.com/you/agentty-hello-world",
+     "build": {
+       "repository": "https://github.com/you/agentty-hello-world",
+       "rev": "3f2b1c9e4a7d05b8c6e1f0a2d4b83c7e9015d6af",
+       "path": ".",
+       "toolchain": "1.98.1",
+       "artifact": "target/wasm32-unknown-unknown/release/hello_world.wasm"
+     },
      "keywords": ["example"],
      "apiVersion": 1,
      "surface": "sidebar",
@@ -61,12 +68,16 @@ description: 마켓플레이스에 플러그인을 등록하거나, Git 저장�
    }
    ```
 
-3. **검사한 뒤 풀 리퀘스트를 엽니다.** CI가 같은 검사를 실행합니다.
+3. **검사한 뒤 풀 리퀘스트를 엽니다.** CI가 같은 검사를 실행하고, 항목과 그것이 가리키는 모듈과 소스를 다시 빌드한 결과가 모두 일치하지 않으면 거부합니다.
 
    ```bash
-   python3 scripts/validate.py --download   # 모듈을 내려받아 체크섬 확인
-   python3 scripts/validate.py --index      # index.json 재생성
+   python3 scripts/validate.py              # 모든 항목의 형식·호스트·권한·빌드 블록
+   python3 scripts/validate.py --download   # 각 모듈을 내려받아 체크섬까지 확인
+   python3 scripts/validate.py --source     # 소스를 누구나 읽을 수 있는지까지 확인
+   python3 scripts/verify_build.py          # 소스를 다시 빌드해 체크섬과 대조
    ```
+
+`verify_build.py`에는 Docker가 필요합니다. 다이제스트로 고정한 `rust` 이미지 안에서 모듈을 빌드하므로, 빌드한 기계에 따라 바이트가 달라지지 않습니다. CI가 여러분과 같은 체크섬에 도달할 수 있는 이유입니다.
 
 ### 항목의 필드
 
@@ -75,19 +86,23 @@ description: 마켓플레이스에 플러그인을 등록하거나, Git 저장�
 | `id` | 2~40자의 `a-z 0-9 -`. 파일은 `plugins/<id>.json` |
 | `name`, `version`, `description` | Agentty에 표시됨. `name`은 60자, `description`은 300자까지. `version`은 `major.minor.patch` |
 | `publisher`, `license` | 만든 사람과 라이선스 |
-| `source` | 모듈을 빌드한 공개 저장소 — **필수**. `github.com`, `gitlab.com`, `codeberg.org`, `git.sr.ht` 중 하나면 되고, GitHub일 필요는 없습니다 |
+| `source` | 모듈을 빌드한 공개 저장소 — **필수**. `github.com`, `gitlab.com`, `codeberg.org`, `git.sr.ht` 중 하나면 되고, GitHub일 필요는 없습니다. `build.repository`와 같은 저장소여야 합니다 — 항목이 가리키는 코드가 실제로 배포되는 코드여야 하기 때문입니다 |
+| `build` | **필수** — 그 모듈을 다시 빌드하는 방법. `repository`(클론 주소), `rev`(40자 전체 커밋. 태그나 브랜치는 나중에 옮겨질 수 있어 안 됩니다), `path`(저장소 안 플러그인 디렉터리, 또는 `.`), `toolchain`(마켓플레이스가 쓰는 Rust 버전), `artifact`(빌드가 만드는 `.wasm`, `path` 기준 상대 경로). 어느 것도 명령이 아닙니다 — 무엇을 실행할지는 `scripts/verify_build.py`에 고정되어 있습니다 |
 | `homepage`, `keywords`, `icon` | 선택. 아이콘은 Agentty 아이콘 집합의 이름 |
 | `apiVersion` | 모듈이 대상으로 한 플러그인 프로토콜. `1`이면 생략 |
 | `surface` | 아이콘 위치: `sidebar`, `pane`(기본), `status` |
 | `mode` | 패널이 열리는 방식: `push`(기본), `overlay`, `window`, `full` |
 | `permissions` | 요청하는 권한. 설치 전에 표시되고, 더 요구하는 업데이트에서 다시 표시됩니다 |
 | `module.url` | `github.com`, `raw.githubusercontent.com`, `objects.githubusercontent.com` 중 하나의 `https://` 주소. 경로에 버전을 넣어 두면 릴리스를 몰래 바꿔치기할 수 없습니다 — 검사 항목이 아니라 관례입니다 |
-| `module.sha256` | 체크섬. 일치하지 않는 다운로드는 거부됩니다 |
-| `module.size` | 바이트 단위 크기 — 어림값이 아니라 **정확한** 길이여야 합니다. 길이가 다르면 다운로드가 거부됩니다. 최대 8MB |
+| `module.sha256` | 체크섬. 일치하지 않는 다운로드는 거부되고, 일치하더라도 WebAssembly 모듈이 아닌 바이트는 거부됩니다 |
+| `module.size` | 바이트 단위의 정확한 길이. 최대 8MB. 상한이 아니라 정확한 값입니다 — 길이가 다른 다운로드는 거부되므로, 빌드할 때마다 바뀝니다 |
+
+등록된 플러그인은 엔트리에 로고를 담지 않습니다. 아이콘 대신 이미지를 쓰고 싶다면 모듈의 `agentty.logo` 섹션에 넣으세요. 그러면 나머지와 마찬가지로 `module.sha256`이 덮게 되고, 누군가 플러그인을 설치할 때 게시자 서버로 아무 요청도 나가지 않습니다. [로고](/docs/plugin-rust#로고) 참고.
 
 ### 거부되는 경우
 
-- `source`의 저장소에서 빌드되지 않은 모듈이거나, 아무도 읽을 수 없는 저장소인 경우.
+- `build.repository`를 `build.rev`에서 다시 빌드해도 CI가 같은 바이트에 도달하지 못하는 모듈이거나, 아무도 읽을 수 없는 저장소인 경우.
+- `build.path`의 매니페스트가 항목과 어긋나는 경우 — id·버전·`apiVersion`·권한 목록이 다른 경우.
 - 체크섬이 URL이 제공하는 것과 다른 경우.
 - 쓰지 않는 권한을 요청하거나, 그 권한으로 무엇을 하는지 설명에 없는 경우.
 - 다른 플러그인, 다른 배포자, 또는 Agentty 자체인 척하는 경우.

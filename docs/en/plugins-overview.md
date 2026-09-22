@@ -65,7 +65,6 @@ Plugins you keep to yourself never have to pass through that list — **Install 
 ## Using a plugin
 
 - **Panel** — plugins with a panel get a button, in the tab strip above the terminals, in the activity bar down the left edge, or in the status bar along the bottom — the plugin picks which. Click it to open the panel, click again to close. The ↻ in the panel header restarts the plugin; the gear opens the Plugins page.
-- **Buttons above terminals** — plugin commands can appear as icons in the status bar above a Claude Code or Codex pane, and in split-pane headers. They act on that pane.
 - **Command palette** — ⇧⌘P lists every plugin command under *Plugin*.
 
 ### Where a panel opens

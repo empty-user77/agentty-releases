@@ -112,7 +112,7 @@ The SDK is a single dependency-free file. Press **Developer Guide** on the Plugi
   "permissions": ["prompt.inject"],
   "contributes": {
     "panel": { "title": "Hello", "icon": "sparkles" },
-    "commands": [{ "id": "hello.explain", "title": "Hello: Explain this folder", "icon": "bot", "paneBar": true }]
+    "commands": [{ "id": "hello.explain", "title": "Hello: Explain this folder", "icon": "bot" }]
   }
 }
 ```
@@ -148,7 +148,7 @@ function explain(context) {
 
 ## Install it
 
-**Plugins → Install from Folder…** and pick the folder, or **Link Folder for Development…** to run it where it is. Then **Refresh** (or reopen the page): the plugin shows up as installed, its panel button appears where its `surface` says, and its commands appear in the palette (⇧⌘P) and above terminal panes.
+**Plugins → Install from Folder…** and pick the folder, or **Link Folder for Development…** to run it where it is. Then **Refresh** (or reopen the page): the plugin shows up as installed, its panel button appears where its `surface` says, and its commands appear in the palette (⇧⌘P).
 
 ## Test it
 
