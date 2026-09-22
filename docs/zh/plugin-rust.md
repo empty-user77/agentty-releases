@@ -109,6 +109,20 @@ cp target/wasm32-unknown-unknown/release/hello.wasm hello.wasm
 
 把模块放在 `agentty-plugin.json` 旁边，然后**插件 → 从文件夹安装…** 选中该文件夹。重新构建后，插件页面上的**重启**会加载新版本。
 
+## 徽标
+
+模块没有可以放图片的文件夹，于是模块自己带着图片：一个名为 `agentty.logo` 的 WebAssembly 自定义段。引擎会忽略这个段，而市场条目里的校验和本来就覆盖它 —— 徽标和模块的其余部分一样，都是经过审核的字节。在 Rust 中这就是一个 static：
+
+```rust
+#[used]
+#[link_section = "agentty.logo"]
+static LOGO: [u8; 1234] = *include_bytes!("logo.png");
+```
+
+`#[used]` 不能省：发布构建会丢掉没有任何东西引用的 static，段也会随之消失。数组长度必须等于文件长度。
+
+这些字节必须是不超过 512 KB 的 PNG、JPEG、GIF 或 WebP，安装时会据此核对。SVG 无论起什么名字都会被拒绝 —— 见[徽标](/docs/plugin-manifest#徽标)。Agentty 会在安装时把图片写成文件，因此绘制列表时不会解析模块。
+
 ## 限制
 
 | | |

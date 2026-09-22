@@ -51,6 +51,9 @@ Agentty 把所有东西都放在 `~/.agentty/`。其中大部分在**设置**（
 | `theme` | 内置主题名，或导入的 `.itermcolors` 去掉扩展名的文件名 |
 | `fontFamily`、`fontSize`、`lineHeight`、`padding` | 外观 |
 | `cursorShape` | `block`、`beam`、`underline`；`cursorBlink` 控制闪烁 |
+| `letterSpacing` | 每个终端单元格额外增加的宽度（点，0–8） |
+| `boldText` | 以粗体绘制普通终端文字；原本加粗的部分会更粗 |
+| `colorBackground`、`colorForeground`、`colorCursor`、`colorSelection` | 手动替换的主题颜色，以 `0xRRGGBB` 数值书写 —— JSON 没有十六进制字面量，所以 `0x121212` 写作 `1184274`。不设置即为主题自带的颜色 |
 | `scrollback` | 每个终端保留的行数 |
 | `askDirectory` | 新建工作区时询问文件夹；`askDirectoryForTabs` 对标签页同理 |
 | `resumeBar` | 终端进入含有早先会话的文件夹时提示恢复 |
@@ -60,12 +63,16 @@ Agentty 把所有东西都放在 `~/.agentty/`。其中大部分在**设置**（
 | `stopServersOnClose` | 关闭窗格时停止其中启动的服务器 |
 | `confirmClose` | 关闭用过的东西前先确认 |
 | `agentBarPosition` | `top` 或 `bottom` |
-| `hud` | 状态栏项目及顺序：`model`、`context`、`usage`、`status`、`elapsed`、`links`、`spacer`、`ports`、`plugins`、`worktree`、`branch`、`folder` |
+| `workspaceSearchBar` | 工作区列表上方的搜索框，搜索名称及其中的对话（默认开启） |
+| `sortFinishedToTop` | 智能体完成后把该工作区移到顶部（默认关闭；关闭时保留你自行排列的顺序） |
+| `hud` | 状态栏项目及顺序：`model`、`context`、`usage`、`status`、`elapsed`、`links`、`spacer`、`ports`、`worktree`、`branch`、`folder` |
 | `browser.autoOpenServers` | 开发服务器有响应后在内置浏览器中打开 |
 | `linkOpener` | ⌘-点击使用内置浏览器还是默认浏览器 |
 | `externalEditor` | `auto`、`vsCode`、`cursor`、`system` |
 | `harnessDetect`、`harnessPatterns`、`harnessSubmit`、`harnessAgent` | harness 的检测与行为 |
 | `systemNotifications`、`notifyWhenFocused`、`notifyAnswerRequests`、`chatNotify` | 通知 |
+| `chatNotify.slackBot`、`chatNotify.discordBot` | 用机器人令牌和频道发送，而不是 Webhook URL |
+| `chatNotify.slackChannel`、`chatNotify.discordChannel` | 机器人写入的频道 —— Slack 可用 `#general`、`general` 或频道 id；Discord 用频道 id |
 | `analytics` | 是否同意匿名使用统计。`false` 或 `DO_NOT_TRACK=1` 时不发送任何内容 |
 | `menuBar` | 菜单栏图标（macOS） |
 

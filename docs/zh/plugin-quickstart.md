@@ -112,7 +112,7 @@ SDK 是一个没有依赖的单文件。在插件页面按**开发者指南**，
   "permissions": ["prompt.inject"],
   "contributes": {
     "panel": { "title": "Hello", "icon": "sparkles" },
-    "commands": [{ "id": "hello.explain", "title": "Hello: Explain this folder", "icon": "bot", "paneBar": true }]
+    "commands": [{ "id": "hello.explain", "title": "Hello: Explain this folder", "icon": "bot" }]
   }
 }
 ```
@@ -148,7 +148,7 @@ function explain(context) {
 
 ## 安装
 
-**插件 → 从文件夹安装…** 选中文件夹，或者用**链接开发文件夹…** 让它在原地运行。然后**刷新**（或重新打开页面）：插件就会显示为已安装，面板按钮出现在 `surface` 指定的位置，命令出现在命令面板（⇧⌘P）和终端窗格上方。
+**插件 → 从文件夹安装…** 选中文件夹，或者用**链接开发文件夹…** 让它在原地运行。然后**刷新**（或重新打开页面）：插件就会显示为已安装，面板按钮出现在 `surface` 指定的位置，命令出现在命令面板（⇧⌘P）中。
 
 ## 测试
 

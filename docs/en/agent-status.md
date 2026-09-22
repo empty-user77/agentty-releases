@@ -40,4 +40,6 @@ Agentty passes the agent a status hook on the command line when the pane starts.
 
 The same page connects **Slack**, **Discord** or **Telegram**, so a question reaches you when you are away from the machine. You choose whether a message is sent only when an agent needs you, or when one finishes as well, and whether to include what the agent asked.
 
+Slack and Discord take either form: a webhook URL, or a bot token together with the channel to write to — Slack accepts `#general`, `general` or a channel id, Discord takes a channel id. Telegram is always a bot, with the chat to write to.
+
 Webhook URLs and the bot token are stored in the operating system's credential store, never in a settings file.

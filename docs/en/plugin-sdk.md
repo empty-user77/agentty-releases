@@ -25,7 +25,7 @@ All handlers may be async. Errors are logged and shown to the user as a notifica
 | Handler | Called when |
 |---|---|
 | `onActivate(info => …)` | The plugin started. `info` has `plugin.dataDir`, `language` and `context` |
-| `command(id, ({ context, args }) => …)` | A command runs, from the palette or a pane-bar button |
+| `command(id, ({ context, args }) => …)` | A command runs, from the command palette |
 | `onPanelOpen(context => …)` | The panel became visible — render here |
 | `onPanelClose(context => …)` | The panel was hidden |
 | `onEvent(elementId, (event, context) => …)` | A UI element with that id was used |

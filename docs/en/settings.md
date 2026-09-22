@@ -15,6 +15,8 @@ Language (English, 한국어, 日本語, 中文), and the behavior of the things
 | Agent status bar | The bar above AI panes, and whether it sits above or below the terminal |
 | Confirm close | Ask before closing a pane, tab or workspace that was used |
 | Own worktree per session | A second session in a busy project gets its own git worktree |
+| Search box above the workspace list | Searches workspace names and the conversations held in them |
+| Move a finished workspace to the top | Off keeps the order you arranged yourself |
 | Parallel tasks | Agents may ask to start tasks in split panes; you confirm each request |
 | Tell agents what Agentty offers | Agents started here get a short guide to Agentty's commands, passed on the command line |
 | Stop servers on close | Closing a pane stops the local servers started in it |
@@ -31,7 +33,7 @@ How new Claude Code and Codex tabs sign in. The default changes nothing — the 
 
 ## Appearance
 
-Theme, font, font size, line height, cursor shape and blink, padding, scrollback. Also which items the agent status bar shows, and in what order. See [Themes and fonts](/docs/themes).
+Theme, font, font size, line height, letter spacing, bold text, colours of your own for background, text, cursor and selection, cursor shape and blink, padding, scrollback. Also which items the agent status bar shows, and in what order. See [Themes and fonts](/docs/themes).
 
 ## Keyboard shortcuts
 

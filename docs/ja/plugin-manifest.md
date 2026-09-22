@@ -20,7 +20,7 @@ description: agentty-plugin.json のすべてのフィールド — 識別情報
   "contributes": {
     "panel": { "title": "Hello", "icon": "sparkles" },
     "commands": [
-      { "id": "hello.explain", "title": "Hello: Explain this folder", "icon": "bot", "paneBar": true }
+      { "id": "hello.explain", "title": "Hello: Explain this folder", "icon": "bot" }
     ]
   }
 }
@@ -39,6 +39,7 @@ description: agentty-plugin.json のすべてのフィールド — 識別情報
 | `keywords` | | ストア検索用 |
 | `links` | | カードにボタンとして出る `{ "label", "url" }` を最大 6 件（プロジェクトサイト、ドキュメント、ソース） |
 | `icon` | | 下記一覧のアイコン名 |
+| `logo` | | プラグインフォルダ内の画像ファイル。`icon` の代わりに描画されます。モジュールはロゴをモジュール内に持ちます — [ロゴ](#ロゴ)を参照 |
 
 ## 実行
 
@@ -113,8 +114,6 @@ Agentty はプラグインフォルダを作業ディレクトリとしてプロ
       "title": "Hello: Explain this folder",
       "description": "Sends a tour request to the focused agent",
       "icon": "bot",
-      "paneBar": true,
-      "when": "agent",
       "palette": true
     }
   ]
@@ -126,12 +125,10 @@ Agentty はプラグインフォルダを作業ディレクトリとしてプロ
 | `id` | プラグイン内で一意。SDK はこの id でハンドラを登録します |
 | `title` | パレットに表示。プラグイン名を先頭に付けるとまとまって見えます |
 | `description` | 任意の 2 行目 |
-| `icon` | ペインバーのボタンのアイコン名 |
-| `paneBar` | `true` で Claude Code・Codex ペイン上のステータスバーと分割ペインのヘッダーにアイコンボタンを追加 |
-| `when` | ペインバーのボタンを `agent` ペイン、`shell` ペイン、`always` に限定 |
+| `icon` | パレットでコマンドの横に表示されるアイコン名 |
 | `palette` | `false` でコマンドパレットから隠す |
 
-ペインバーのコマンドは、フォーカス中のペインではなく**ボタンを押したペイン**のコンテキストを受け取ります。
+コマンドはコマンドパレットから実行します。`paneBar` と `when` はなくなりました。これらが残っているマニフェストもこれまで通りインストール・実行でき、フィールドは無視されます。ただし**そのボタンを前提に作られたプラグインはボタンを失い**、コマンドはパレットから実行することになります。
 
 ## アイコン
 
@@ -151,6 +148,23 @@ rows-2 save scroll-text search send settings shield-alert sparkles square square
 square-terminal star sticky-note tag terminal trash-2 undo-2 unlink upload users wand-sparkles
 workflow wrench x zap git-fork file lock graduation-cap x-twitter
 ```
+
+## ロゴ
+
+ロゴはプラグイン自身の画像です。ストアの一覧、詳細カード、パネルのボタンで、`icon` の名前の代わりにこの画像が描画されます。
+
+**ロゴはどこからも取得しません。**プラグインと一緒に運ばれるので、画面に描かれる絵はユーザーがインストールしたその絵です。そしてロゴを付けても、誰がインストールしたかが作者に伝わることはありません。
+
+| プラグインの種類 | ロゴのある場所 |
+|---|---|
+| フォルダ — `node`、`python`、`executable`、または開発用にリンクしたフォルダ | `"logo": "logo.png"`、プラグインフォルダ内のファイル |
+| 単一の `wasm` モジュール — ストアから来るすべて | モジュールが画像を自分で持ちます。`logo` は使いません。[Rust と WebAssembly](/docs/plugin-rust#ロゴ)を参照 |
+
+マニフェストのフィールドとしての `logo` はファイル名でしかありません。プラグインフォルダの外に出るパス（`../`）、絶対パス、スキームが付いた値（`https://` のアドレスを含む）、400 文字を超える値はいずれも拒否され、プラグインは `icon` をそのまま使います。
+
+モジュールが持つ画像は **PNG・JPEG・GIF・WebP のいずれか**で、名前ではなく**バイトで実際の形式を確認**し、512KB 以下である必要があります。それ以外はロゴではなく、プラグインは `icon` をそのまま使います。
+
+**モジュールのロゴが SVG であることはありません。**どう名乗っていても同じです。SVG は絵ではなく文書だからです — レンダラーがその中に書かれたアドレスを解決するため、ローカルのパスが書かれていればそのファイルが開かれて描画されます。プラグインがロゴと称してユーザー自身のファイルを画面に出せてはなりません。
 
 ## 環境変数
 

@@ -25,7 +25,7 @@ plugin.start();
 | 핸들러 | 호출 시점 |
 |---|---|
 | `onActivate(info => …)` | 플러그인이 시작됨. `info`에 `plugin.dataDir`, `language`, `context` |
-| `command(id, ({ context, args }) => …)` | 팔레트나 페인 바 버튼에서 명령 실행 |
+| `command(id, ({ context, args }) => …)` | 명령 팔레트에서 명령 실행 |
 | `onPanelOpen(context => …)` | 패널이 보이게 됨 — 여기서 그립니다 |
 | `onPanelClose(context => …)` | 패널이 숨겨짐 |
 | `onEvent(elementId, (event, context) => …)` | 해당 id의 UI 요소가 사용됨 |

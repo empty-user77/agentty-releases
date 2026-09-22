@@ -20,7 +20,7 @@ description: agentty-plugin.json의 모든 필드 — 식별 정보, 실행 방�
   "contributes": {
     "panel": { "title": "Hello", "icon": "sparkles" },
     "commands": [
-      { "id": "hello.explain", "title": "Hello: Explain this folder", "icon": "bot", "paneBar": true }
+      { "id": "hello.explain", "title": "Hello: Explain this folder", "icon": "bot" }
     ]
   }
 }
@@ -39,6 +39,7 @@ description: agentty-plugin.json의 모든 필드 — 식별 정보, 실행 방�
 | `keywords` | | 스토어 검색용 |
 | `links` | | 카드에 버튼으로 표시되는 `{ "label", "url" }` 최대 6개 (프로젝트 사이트, 문서, 소스) |
 | `icon` | | 아래 목록의 아이콘 이름 |
+| `logo` | | 플러그인 폴더 안의 그림 파일. `icon` 대신 그려집니다. 모듈은 로고를 모듈 안에 담습니다 — [로고](#로고) 참고 |
 
 ## 실행
 
@@ -113,8 +114,6 @@ Agentty는 플러그인 폴더를 작업 디렉터리로 삼아 프로그램을 
       "title": "Hello: Explain this folder",
       "description": "Sends a tour request to the focused agent",
       "icon": "bot",
-      "paneBar": true,
-      "when": "agent",
       "palette": true
     }
   ]
@@ -126,12 +125,10 @@ Agentty는 플러그인 폴더를 작업 디렉터리로 삼아 프로그램을 
 | `id` | 플러그인 안에서 고유. SDK가 이 id로 핸들러를 등록합니다 |
 | `title` | 팔레트에 표시. 플러그인 이름을 앞에 붙이면 묶여 보입니다 |
 | `description` | 선택적 두 번째 줄 |
-| `icon` | 페인 바 버튼의 아이콘 이름 |
-| `paneBar` | `true`면 Claude Code·Codex 페인 위 상태 바와 분할 페인 헤더에 아이콘 버튼 추가 |
-| `when` | 페인 바 버튼을 `agent` 페인, `shell` 페인, `always` 중으로 제한 |
+| `icon` | 팔레트에서 명령 옆에 표시되는 아이콘 이름 |
 | `palette` | `false`면 명령 팔레트에서 숨김 |
 
-페인 바 명령은 포커스된 페인이 아니라 **버튼을 누른 페인**의 컨텍스트를 받습니다.
+명령은 명령 팔레트에서 실행합니다. `paneBar`와 `when`은 없어졌습니다. 두 필드가 남아 있는 매니페스트도 그대로 설치·실행되고 필드는 무시되지만, **그 버튼에 의존해 만든 플러그인은 버튼을 잃고** 명령은 팔레트에서 실행하게 됩니다.
 
 ## 아이콘
 
@@ -151,6 +148,23 @@ rows-2 save scroll-text search send settings shield-alert sparkles square square
 square-terminal star sticky-note tag terminal trash-2 undo-2 unlink upload users wand-sparkles
 workflow wrench x zap git-fork file lock graduation-cap x-twitter
 ```
+
+## 로고
+
+로고는 플러그인 고유의 이미지입니다. 스토어 목록, 상세 카드, 패널 버튼에서 `icon` 이름 대신 이 이미지가 그려집니다.
+
+**로고는 어디에서도 받아오지 않습니다.** 플러그인과 함께 따라오므로, 화면에 그려지는 그림은 사용자가 설치한 바로 그 그림입니다. 그리고 로고를 넣는다고 해서 플러그인 작성자가 누가 설치했는지 알게 되지 않습니다.
+
+| 플러그인 종류 | 로고가 있는 곳 |
+|---|---|
+| 폴더 — `node`, `python`, `executable`, 또는 개발용으로 연결한 폴더 | `"logo": "logo.png"`, 플러그인 폴더 안의 파일 |
+| 단일 `wasm` 모듈 — 스토어에서 오는 모든 것 | 모듈이 그림을 직접 들고 있습니다. `logo`는 쓰지 않습니다. [Rust와 WebAssembly](/docs/plugin-rust#로고) 참고 |
+
+매니페스트 필드로서의 `logo`는 파일 이름일 뿐입니다. 플러그인 폴더 밖으로 나가는 경로(`../`), 절대 경로, 스킴이 붙은 값(`https://` 주소 포함), 400자를 넘는 값은 모두 거부되고 플러그인은 `icon`을 그대로 씁니다.
+
+모듈이 들고 있는 그림은 **PNG, JPEG, GIF, WebP 중 하나**여야 하고, 이름이 아니라 **바이트로 실제 형식을 확인**하며, 512KB 이하여야 합니다. 그 밖의 것은 로고가 아니고, 플러그인은 `icon`을 그대로 씁니다.
+
+**모듈의 로고는 SVG일 수 없습니다.** 어떤 이름을 달고 있든 마찬가지입니다. SVG는 그림이 아니라 문서이기 때문입니다 — 렌더러가 그 안에 적힌 주소를 열기 때문에, 로컬 경로가 적혀 있으면 그 파일이 열려 그려집니다. 플러그인이 로고라는 이름으로 사용자의 파일을 화면에 띄울 수 있어서는 안 됩니다.
 
 ## 환경 변수
 

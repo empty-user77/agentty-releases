@@ -109,6 +109,20 @@ cp target/wasm32-unknown-unknown/release/hello.wasm hello.wasm
 
 Put the module next to `agentty-plugin.json`, then **Plugins → Install from Folder…** and pick the folder. **Restart** on the plugin's page picks up a new build.
 
+## Logo
+
+A module has no folder of files to ship a picture in, so it carries one itself, in a WebAssembly custom section called `agentty.logo`. The engine ignores the section, and the checksum in the marketplace entry already covers it — the logo is reviewed bytes, like the rest of the module. In Rust that is one static:
+
+```rust
+#[used]
+#[link_section = "agentty.logo"]
+static LOGO: [u8; 1234] = *include_bytes!("logo.png");
+```
+
+`#[used]` is not optional: a release build drops a static nothing refers to, and the section goes with it. The array's length has to be the file's length.
+
+The bytes have to be a PNG, JPEG, GIF or WebP of 512 KB at most, and are checked against that on install. An SVG is refused however it is named — see [Logo](/docs/plugin-manifest#logo). Agentty writes the picture out when the plugin is installed, so drawing a row never parses the module.
+
 ## Limits
 
 | | |

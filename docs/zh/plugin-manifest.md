@@ -20,7 +20,7 @@ description: agentty-plugin.json 的所有字段 —— 标识信息、运行方
   "contributes": {
     "panel": { "title": "Hello", "icon": "sparkles" },
     "commands": [
-      { "id": "hello.explain", "title": "Hello: Explain this folder", "icon": "bot", "paneBar": true }
+      { "id": "hello.explain", "title": "Hello: Explain this folder", "icon": "bot" }
     ]
   }
 }
@@ -39,6 +39,7 @@ description: agentty-plugin.json 的所有字段 —— 标识信息、运行方
 | `keywords` | | 用于商店搜索 |
 | `links` | | 最多 6 个 `{ "label", "url" }`，作为按钮显示在卡片上（项目主页、文档、源码） |
 | `icon` | | 下方列表中的图标名 |
+| `logo` | | 插件文件夹内的图片文件，代替 `icon` 绘制。模块则把徽标放在模块里 —— 见[徽标](#徽标) |
 
 ## 运行
 
@@ -113,8 +114,6 @@ Agentty 以插件文件夹作为工作目录启动程序。`wasm` 插件不启�
       "title": "Hello: Explain this folder",
       "description": "Sends a tour request to the focused agent",
       "icon": "bot",
-      "paneBar": true,
-      "when": "agent",
       "palette": true
     }
   ]
@@ -126,12 +125,10 @@ Agentty 以插件文件夹作为工作目录启动程序。`wasm` 插件不启�
 | `id` | 插件内唯一；SDK 以此 id 注册处理器 |
 | `title` | 显示在命令面板中，前面加上插件名便于归类 |
 | `description` | 可选的第二行 |
-| `icon` | 窗格栏按钮的图标名 |
-| `paneBar` | 为 `true` 时在 Claude Code / Codex 窗格上方的状态栏和分屏窗格标题中添加图标按钮 |
-| `when` | 把窗格栏按钮限定为 `agent` 窗格、`shell` 窗格或 `always` |
+| `icon` | 在命令面板中显示在命令旁边的图标名 |
 | `palette` | 为 `false` 时从命令面板中隐藏 |
 
-窗格栏命令收到的是**按下按钮的那个窗格**的上下文，而不是当前聚焦窗格的。
+命令从命令面板中调用。`paneBar` 和 `when` 已经取消：仍带着这两个字段的清单照常安装和运行，字段会被忽略；但**依赖这些按钮构建的插件会失去按钮**，其命令改为从命令面板中调用。
 
 ## 图标
 
@@ -151,6 +148,23 @@ rows-2 save scroll-text search send settings shield-alert sparkles square square
 square-terminal star sticky-note tag terminal trash-2 undo-2 unlink upload users wand-sparkles
 workflow wrench x zap git-fork file lock graduation-cap x-twitter
 ```
+
+## 徽标
+
+徽标是插件自己的图片。在商店列表、详情卡片和面板按钮上，它会代替 `icon` 的名称被绘制出来。
+
+**徽标绝不会从任何地方获取。**它随插件一起分发，所以屏幕上画出来的就是用户安装的那张图；而且给插件配上徽标，并不会让作者知道是谁安装的。
+
+| 插件类型 | 徽标在哪里 |
+|---|---|
+| 文件夹 —— `node`、`python`、`executable`，或链接用于开发的文件夹 | `"logo": "logo.png"`，插件文件夹内的一个文件 |
+| 单个 `wasm` 模块 —— 一切来自商店的插件 | 模块自己带着图片。不使用 `logo`；见 [Rust 与 WebAssembly](/docs/plugin-rust#徽标) |
+
+作为清单字段，`logo` 只是一个文件名。走出插件文件夹的路径（`../`）、绝对路径、带协议的值（包括 `https://` 地址），以及超过 400 个字符的值都会被拒绝，插件继续使用它的 `icon`。
+
+模块携带的图片必须是 **PNG、JPEG、GIF 或 WebP**，并且**按字节而不是按名称**核对确实是该格式，最多 512 KB。其他一概不算徽标，插件继续使用它的 `icon`。
+
+**模块的徽标绝不会是 SVG**，无论它叫什么名字。因为 SVG 是文档而不是图片：渲染器会解析其中写着的地址，若那里写的是本地路径，该文件就会被打开并画出来。插件不能以徽标之名把用户自己的文件放上屏幕。
 
 ## 环境变量
 

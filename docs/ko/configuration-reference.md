@@ -51,6 +51,9 @@ Agentty는 모든 것을 `~/.agentty/`에 저장합니다. 대부분은 **설정
 | `theme` | 기본 테마 이름, 또는 가져온 `.itermcolors`의 확장자 없는 파일 이름 |
 | `fontFamily`, `fontSize`, `lineHeight`, `padding` | 모양 |
 | `cursorShape` | `block`, `beam`, `underline`. `cursorBlink`는 깜박임 |
+| `letterSpacing` | 터미널 셀마다 더해지는 너비(pt, 0–8) |
+| `boldText` | 일반 텍스트를 굵게 그림. 원래 굵던 글씨는 한 단계 더 굵어짐 |
+| `colorBackground`, `colorForeground`, `colorCursor`, `colorSelection` | 직접 바꾼 테마 색. `0xRRGGBB` 값을 숫자로 적음 — JSON에는 16진 리터럴이 없어 `0x121212`는 `1184274` |
 | `scrollback` | 터미널마다 유지할 줄 수 |
 | `askDirectory` | 새 워크스페이스의 폴더를 묻기. `askDirectoryForTabs`는 탭에 대해 동일 |
 | `resumeBar` | 예전 세션이 있는 폴더에 들어가면 이어가기를 제안 |
@@ -60,12 +63,16 @@ Agentty는 모든 것을 `~/.agentty/`에 저장합니다. 대부분은 **설정
 | `stopServersOnClose` | 페인을 닫으면 거기서 시작한 서버를 종료 |
 | `confirmClose` | 사용한 것을 닫기 전에 확인 |
 | `agentBarPosition` | `top` 또는 `bottom` |
-| `hud` | 상태 바 항목 순서: `model`, `context`, `usage`, `status`, `elapsed`, `links`, `spacer`, `ports`, `plugins`, `worktree`, `branch`, `folder` |
+| `workspaceSearchBar` | 작업공간 목록 위 검색창. 이름과 그 안에서 나눈 대화를 검색(기본 켬) |
+| `sortFinishedToTop` | 에이전트가 끝낸 작업공간을 맨 위로 올림(기본 끔. 끄면 직접 정리한 순서 유지) |
+| `hud` | 상태 바 항목 순서: `model`, `context`, `usage`, `status`, `elapsed`, `links`, `spacer`, `ports`, `worktree`, `branch`, `folder` |
 | `browser.autoOpenServers` | 개발 서버가 응답하면 인앱 브라우저에서 열기 |
 | `linkOpener` | ⌘-클릭이 인앱 브라우저를 쓸지 기본 브라우저를 쓸지 |
 | `externalEditor` | `auto`, `vsCode`, `cursor`, `system` |
 | `harnessDetect`, `harnessPatterns`, `harnessSubmit`, `harnessAgent` | 하네스 탐지와 동작 |
 | `systemNotifications`, `notifyWhenFocused`, `notifyAnswerRequests`, `chatNotify` | 알림 |
+| `chatNotify.slackBot`, `chatNotify.discordBot` | 웹훅 URL 대신 봇 토큰과 채널로 보내기 |
+| `chatNotify.slackChannel`, `chatNotify.discordChannel` | 봇이 쓸 채널. Slack은 `#general`·`general`·채널 ID, Discord는 채널 ID |
 | `analytics` | 익명 사용 통계 동의. `false`이거나 `DO_NOT_TRACK=1`이면 아무것도 보내지 않음 |
 | `menuBar` | 메뉴 바 아이콘(macOS) |
 
