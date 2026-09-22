@@ -43,6 +43,8 @@ Right-click one for the rest: go to the terminal working there, open a new termi
 
 Removing asks first. The dialog names the branch and says what goes with it: the working tree and its folder, and the local branch too when you picked **Remove working tree and branch**. If that branch was pushed, the dialog offers to delete it on the remote as well — the tick is off by default, and the remote branch only goes once the local one really went. Git decides what is safe either way: a tree with uncommitted changes stays, and so does a branch with commits nothing else has.
 
+A tree a tab is still working in is never removed: the menu leaves those entries out, and removing it any other way says so rather than asking. Close that tab first.
+
 ## Parallel tasks
 
 Ask an agent to split work up — "do A, B and C in parallel". It asks Agentty, you confirm once, and each task starts in its own split pane and its own worktree.
