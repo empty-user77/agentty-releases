@@ -5,6 +5,9 @@ description: 处理器、调用、面板 UI 构建器与上下文对象 —— a
 
 `agentty-plugin.mjs` 是一个无依赖的单文件，类型定义在同目录的 `agentty-plugin.d.ts` 中。在插件页面点击**开发者指南**，Agentty 会把两者解压到 `~/.agentty/plugins/.sdk/`。
 
+> [!NOTE]
+> 这样写出来的插件会在用户机器上以程序方式运行，需要 `PATH` 里有 Node.js 18 及以上，并且从文件夹或 Git 仓库安装。[插件市场](/docs/plugin-publishing)只收录 WebAssembly 模块——那条路见 [Rust 与 WebAssembly](/docs/plugin-rust)。
+
 ```js
 import { createPlugin, ui } from './agentty-plugin.mjs';
 
@@ -43,12 +46,16 @@ plugin.start();
 | `setBadge(text)` —— 标签栏按钮上最多 8 个字符 | |
 | `getContext()` | |
 | `openUrl(url)` —— http/https | |
+| `copy(text)` —— 复制到剪贴板 | |
 | `revealPath(path)` —— 在文件管理器中显示 | `workspace.read` |
 | `injectPrompt(request)` | `prompt.inject` |
 | `sendToTerminal({ paneId, text, submit })` | `terminal.write` |
 | `getSession({ paneId, maxTurns })` | `session.read` |
 | `listWorkspaces()` | `workspace.read` |
+| `fetch(request)` —— HTTP 请求 | `net.request` |
 | `log(...)` —— 写入插件日志（stderr） | |
+
+协议里还有 `storage/get`、`storage/set` 和 `storage/keys`（插件自己文件夹里的一个 JSON 文档，不需要权限），以及从 API 版本 2 起的 `host/timer` 和 `pane/status`。Node 插件也可以自己写文件，但 storage 对两种插件的行为是一样的。见[协议](/docs/plugin-protocol)。
 
 `plugin.info` 保存 `initialize` 的数据，`plugin.context` 是最新的上下文。
 
@@ -62,7 +69,7 @@ plugin.start();
 | `ui.section(title, children)` | 带标题的分组 | |
 | `ui.text(text, style)` | `body`、`title`、`muted`、`small`、`code`、`error`、`success` | |
 | `ui.button(id, label, { icon, variant, disabled })` | `primary`、`secondary`、`ghost`、`danger` | `click` |
-| `ui.input(id, { placeholder, value })` | 单行输入 | 停止输入后 `change`，回车时 `submit`；`event.value` 为文本 |
+| `ui.input(id, { placeholder, value, rows })` | 单行输入；`rows` 大于 1 时为该行数的文本域（最多 24） | 停止输入后 `change`，回车时 `submit`；`event.value` 为文本 |
 | `ui.list(id, items, { empty })` | 行 `{ id, title, subtitle, detail, icon, tone, actions }` | 带 `event.item` 的 `select`；行内按钮发送带 `event.item` 和 `event.action` 的 `action` |
 | `ui.choice(id, [{ value, label }], value)` | 分段选择 | 带取值的 `change` |
 | `ui.toggle(id, label, value)` | 开关 | 带新布尔值的 `change` |
@@ -97,7 +104,7 @@ plugin.onEvent('notes', (event, context) => {
 ```
 
 > [!NOTE]
-> 限制：2,000 个元素、12 层深度、每段文本 20,000 字符。面板最快每 50ms 重绘一次，通知最快每 700ms 一条。每秒发送超过 240 条消息的插件会被视为失控并停止。
+> 限制：2,000 个元素、12 层深度、每个字符串 20,000 字符；`choice` 的选项和列表项的按钮也计入元素。面板最快每 50ms 重绘一次，通知最快每 700ms 一条。每秒发送超过 240 条消息的插件会被视为失控并停止。
 
 ## 上下文
 

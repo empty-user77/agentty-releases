@@ -1,9 +1,9 @@
 ---
 title: Plugins
-description: What plugins add to Agentty, how to install and use them, and how links from other apps hand work to your terminals.
+description: What plugins add to Agentty, installing them from the marketplace or your own folder, and what to check before you trust one.
 ---
 
-Plugins connect Agentty with other apps and add tools to your terminals. A plugin can put a **panel** next to your terminals, add **buttons** above agent panes, add entries to the **command palette**, and hand text to an agent as a **prompt** — always after you choose where it goes.
+Plugins connect Agentty with other apps and add tools to your terminals. A plugin can put a **panel** next to your terminals, add **buttons** above agent panes, add entries to the **command palette**, and hand text to an agent as a **prompt**. Where that prompt goes is the plugin's choice unless it asks you, so the permissions on its card are worth reading.
 
 Writing one? Start with the [plugin quick start](/docs/plugin-quickstart).
 
@@ -12,6 +12,7 @@ Writing one? Start with the [plugin quick start](/docs/plugin-quickstart).
 Open it from the activity bar (the puzzle icon), **View → Plugins**, or the command palette (⇧⌘P → "Plugins").
 
 - **Installed** — every plugin you have, with what it adds and what it may do.
+- **Marketplace** — the plugins Agentty offers, including its own. See below.
 - **Available** — plugins that ship with Agentty. If the app a plugin integrates with is installed, it is marked **Recommended**.
 - **Build your own** — create a plugin with AI, or install one from a Git repository or a folder.
 
@@ -23,6 +24,7 @@ Plugins start when you first use them, not when Agentty launches, so an idle plu
 
 | From | How |
 |---|---|
+| The marketplace | **Install** on a card under *Marketplace* |
 | Built in | **Install** on a card under *Available* |
 | A Git repository | Paste an `https://` URL under *Build your own* → **Install from Git** |
 | A folder | **Install from Folder…** copies it into `~/.agentty/plugins/` |
@@ -30,14 +32,54 @@ Plugins start when you first use them, not when Agentty launches, so an idle plu
 
 You can also copy a plugin folder into `~/.agentty/plugins/` yourself and press **Refresh**.
 
+## What you are trusting
+
+Before installing, the card lists what the plugin may do, as full sentences under **Permissions** — make HTTP requests, start agent sessions, type into terminals, read AI conversations, see workspaces.
+
+It also says, under **About → Runs as**, which of two very different things the plugin is:
+
+| | |
+|---|---|
+| **WebAssembly** | Agentty runs the module itself. It has no files, no processes and no network of its own, and reaches only what those permissions allow — **however it is written**. |
+| **A program** (`node`, `python`, an executable) | Runs as you, with the same access as anything else you start. The permissions gate what it does through Agentty; nothing gates the program itself. |
+
 > [!IMPORTANT]
-> Before installing, the card lists what the plugin may do: send prompts, type into terminals, read AI conversations, see workspaces. A plugin runs as a normal program with your user's access, so install only plugins you trust. The model is explained in [Plugin permissions](/docs/plugin-permissions).
+> Install a program plugin only if you trust its author. Everything in the marketplace is the first kind, which is what makes it safe to install a binary from a list.
+
+The whole model is in [Plugin permissions](/docs/plugin-permissions).
+
+## The marketplace
+
+**Plugins → Marketplace** lists what [Agentty-Marketplace](https://github.com/empty-user77/Agentty-Marketplace) offers. Plugins are added there by pull request, and what is offered is **a WebAssembly module whose source is public** — nothing else. Agentty's own plugins are there too, on the same footing: nothing is bundled into the application.
+
+Installing one:
+
+1. Agentty reads the list over HTTPS and checks every entry again here — its id, its text, its permissions, the host its module comes from. An entry that does not check out is left out of the list rather than shown.
+2. The card shows what the plugin is, where its source is, its licence, the size of the module and its checksum, and what it may do.
+3. On **Install**, Agentty downloads the module and weighs it against that checksum. **Nothing reaches the plugins folder before they match.**
+
+An entry says which plugin protocol its module is built against. An Agentty that speaks an older one still lists the plugin, but says it needs a newer Agentty instead of offering to install it.
+
+Plugins you keep to yourself never have to pass through that list — **Install from Folder…** and **Install from Git** take anything.
 
 ## Using a plugin
 
-- **Panel** — plugins with a panel get a button in the tab strip. Click it to open the panel next to your terminals, click again to close. The ↻ in the panel header restarts the plugin; the gear opens the Plugins page.
+- **Panel** — plugins with a panel get a button, in the tab strip above the terminals, in the activity bar down the left edge, or in the status bar along the bottom — the plugin picks which. Click it to open the panel, click again to close. The ↻ in the panel header restarts the plugin; the gear opens the Plugins page.
 - **Buttons above terminals** — plugin commands can appear as icons in the status bar above a Claude Code or Codex pane, and in split-pane headers. They act on that pane.
 - **Command palette** — ⇧⌘P lists every plugin command under *Plugin*.
+
+### Where a panel opens
+
+The panel's layout button changes how it opens, and your choice is kept:
+
+| | |
+|---|---|
+| **Docked** | beside the terminals, which move over to make room |
+| **Floating** | above the window at its right edge; nothing else moves |
+| **Window** | a window of its own, which can be moved and resized |
+| **Full** | the whole area the terminals and pages use |
+
+A docked panel never takes so much room that the rest of the window is squeezed: dragged past what can be docked, it becomes a floating one.
 
 ### The "Send to…" dialog
 
@@ -47,7 +89,9 @@ When a plugin, or a link from another app, sends a prompt, Agentty shows what wi
 - **New workspace** (with a folder you can change), **New tab** in the current workspace, or one of your **open workspaces** — an idle agent there receives it, otherwise a new agent tab opens
 - **Send right away**, or leave it unchecked to have the text typed in without pressing Enter
 
-Terminals only ever get the text typed in; Agentty never runs it for you. Nothing is sent until you press **Send**.
+Terminals only ever get the text typed in — Enter is never pressed for a prompt sent this way. Nothing is sent until you press **Send**.
+
+`terminal.write` is the other thing: a plugin holding it types into an open terminal **and presses Enter**, in a shell as well, where that runs the command. No dialog stands in front of that one, which is why the card names it separately.
 
 ## Links from other apps
 
@@ -79,7 +123,9 @@ Busy agents are left alone; try again when the turn finishes. While Cosmica is r
 
 | Symptom | What to do |
 |---|---|
-| "Node.js was not found" | Plugins written in JavaScript need Node.js 18+ on your login shell's `PATH` |
+| "Node.js was not found" | Plugins written in JavaScript need Node.js 18+ on your login shell's `PATH`. WebAssembly plugins need nothing installed |
+| An install from the marketplace was refused | The module did not match the checksum in the listing. Nothing was written; report it to the plugin's author |
+| A marketplace card says you need a newer Agentty | The plugin is built against a plugin protocol this version does not speak. Update Agentty |
 | A card says the plugin stopped with an error | Open **Logs** on the card; after fixing the code press **Restart** |
 | A plugin you copied in doesn't appear | Press **Refresh**, and check that the folder name matches the `id` in `agentty-plugin.json` |
 | A link does nothing | Use the installed application, and make sure the plugin the link names is installed and enabled |
@@ -100,5 +146,7 @@ Uninstalling removes the plugin; its data folder stays until you delete it.
 ## Next
 
 - [Plugin quick start](/docs/plugin-quickstart) — write one in a few minutes
-- [Manifest reference](/docs/plugin-manifest) · [Node.js SDK](/docs/plugin-sdk) · [Protocol](/docs/plugin-protocol)
+- [Rust and WebAssembly](/docs/plugin-rust) · [Node.js SDK](/docs/plugin-sdk)
+- [AgentOS plugins](/docs/plugin-agentos) — plugins that run work through agents
+- [Manifest reference](/docs/plugin-manifest) · [Protocol](/docs/plugin-protocol)
 - [Permissions](/docs/plugin-permissions) · [Publishing](/docs/plugin-publishing)

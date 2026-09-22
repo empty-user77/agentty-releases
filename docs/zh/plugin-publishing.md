@@ -1,79 +1,143 @@
 ---
 title: 发布插件
-description: 通过 Git 仓库或文件夹分享插件、为它编号版本，并在 Agentty 演进时保持可用。
+description: 把插件登记到市场，或者自己以 Git 仓库、文件夹的形式分发。
 ---
 
-没有中央注册表。插件就是一个带清单的文件夹，所以发布意味着把这个文件夹放到别人能拿到的地方。
+把插件交到别人手里有两条路，能走哪一条取决于它是哪种插件。
 
-## 用 Git 仓库分享
+| | |
+|---|---|
+| **插件市场** | 源码公开的 WebAssembly 模块。出现在**插件 → 市场**，一键安装，并用校验和核对。 |
+| **自己分发** | 任何插件，包括以程序方式运行的。用户从自己挑定的 Git 仓库或文件夹安装。 |
 
-把 `agentty-plugin.json` 放在仓库**根目录**。用户在*自己构建* → **从 Git 安装**中粘贴 `https://` 地址。
+## 插件市场
+
+[Agentty-Marketplace](https://github.com/empty-user77/Agentty-Marketplace) 就是 Agentty 读取的那份清单。插件通过 pull request 添加。Agentty 自己的插件也在那里，条件完全一样——应用里没有内置任何插件。
+
+清单里的插件是**一个源码公开的 WebAssembly 模块**。规则只有这一条，而且两半都要紧：
+
+- **必须是 WebAssembly**，因为 Agentty 自己运行它，它只能碰到协议给的东西。以程序方式运行的插件拥有你拥有的一切，Agentty 不会从互联网上的清单里安装那种东西。
+- **源码必须公开**，因为清单里的模块是二进制。任何人都能读它由什么构建而来，并且重新构建一遍。
+
+### 安装时会发生什么
+
+1. Agentty 通过 HTTPS 读取 `index.json`。每一条都会在这里重新检查——id、文案、权限、模块来自哪个主机。没通过的条目会被排除在清单之外，而不是照样显示。
+2. 插件页面会展示它是什么、源码在哪、许可证、模块大小和校验和，以及在权限之下用完整句子写明的**它能做什么**。
+3. 按下**安装**后，Agentty 下载模块，核对长度是否等于 `module.size`，与校验和比对，并确认这些字节确实是一个 WebAssembly 模块。三者都对上之前，插件文件夹里不会进入任何东西。
+
+### 提交一个插件
+
+1. **构建并发布模块。** 通常放在插件仓库的 GitHub release 里。
+
+   ```bash
+   cargo build --release --target wasm32-unknown-unknown
+   cp target/wasm32-unknown-unknown/release/your_plugin.wasm your-plugin.wasm
+   shasum -a 256 your-plugin.wasm
+   wc -c your-plugin.wasm
+   ```
+
+2. **写条目。** 把 `plugins/_template.json` 复制成 `plugins/<你的插件 id>.json`。id 要和文件名以及 `agentty-plugin.json` 里的 `id` 一致。
+
+   ```json
+   {
+     "id": "hello-world",
+     "name": "Hello World",
+     "version": "0.1.0",
+     "publisher": "Your Name",
+     "description": "One sentence about what it does.",
+     "icon": "sparkles",
+     "license": "MIT",
+     "source": "https://github.com/you/agentty-hello-world",
+     "keywords": ["example"],
+     "apiVersion": 1,
+     "surface": "sidebar",
+     "mode": "push",
+     "permissions": [],
+     "module": {
+       "url": "https://github.com/you/agentty-hello-world/releases/download/v0.1.0/hello-world.wasm",
+       "sha256": "…64 位十六进制…",
+       "size": 93292
+     }
+   }
+   ```
+
+3. **先检查，再开 pull request。** CI 会跑同样的检查。
+
+   ```bash
+   python3 scripts/validate.py --download   # 下载模块并核对校验和
+   python3 scripts/validate.py --index      # 重新生成 index.json
+   ```
+
+### 条目里的字段
+
+| 字段 | |
+|---|---|
+| `id` | 2–40 个字符的 `a-z 0-9 -`；文件名为 `plugins/<id>.json` |
+| `name`、`version`、`description` | 在 Agentty 中展示。`name` 最多 60 字符，`description` 最多 300，`version` 为 `major.minor.patch` |
+| `publisher`、`license` | 作者，以及许可证 |
+| `source` | 模块由之构建的公开仓库——**必填**。可以在 `github.com`、`gitlab.com`、`codeberg.org` 或 `git.sr.ht`，不一定要是 GitHub |
+| `homepage`、`keywords`、`icon` | 可选；图标取自 Agentty 的图标集 |
+| `apiVersion` | 模块面向的插件协议版本；为 `1` 时可省略 |
+| `surface` | 图标的位置：`sidebar`、`pane`（默认）或 `status` |
+| `mode` | 面板的打开方式：`push`（默认）、`overlay`、`window` 或 `full` |
+| `permissions` | 它申请的权限——安装前会展示，要求变多的更新会再展示一次 |
+| `module.url` | `github.com`、`raw.githubusercontent.com` 或 `objects.githubusercontent.com` 上的 `https://` 地址。把版本放进路径，release 就无法被悄悄替换 —— 这是惯例，不是校验项 |
+| `module.sha256` | 校验和；不匹配的下载会被拒绝 |
+| `module.size` | 字节数 —— 必须是**精确**长度，不是估计值。长度对不上的下载会被拒绝。最大 8 MB |
+
+### 什么会被拒绝
+
+- 并非由 `source` 所指仓库构建的模块，或者谁都读不到的仓库。
+- 校验和与该 URL 提供的内容不一致。
+- 申请了用不到的权限，或者描述里没写清楚拿这些权限做什么。
+- 冒充别的插件、别的发布者，或者冒充 Agentty 本身。
+
+### 更新
+
+改掉 `version`、`module.url`、`module.sha256` 和 `module.size`，再开一个 pull request。所有装了它的人都会收到更新提示。
+
+比已安装版本要求**更多**权限的更新，会说明多要了什么，并且需要再按一次。**全部更新**不会悄悄替你拿下这些，而是把它们留下并告诉你留了几个。所以扩大权限的代价，是失去那些不会再看一眼的用户——把描述写成值得他们再看一眼的样子。
+
+如果新版本用到了只有较新 Agentty 才有的东西，请把 `apiVersion` 一起调高。用旧版 Agentty 的人就会保留手里的版本并被提示更新，而不是拿到一个应用跑不起来的模块——Agentty 也不会把自己跑不了的版本算作已安装版本的更新。
+
+删掉条目后，Agentty 不再提供这个插件。已经装了的人那里仍然保留，他们可以在插件页面自行删除。
+
+> [!NOTE]
+> `AGENTTY_MARKETPLACE_INDEX` 可以让 Agentty 指向另一份清单，方便你在编写清单时试用。模块可以由仓库的 release 提供，也可以来自与清单相同的主机。
+
+## 自己分发
+
+以上都不是使用插件的必要条件。只给自己或公司内部用的插件，完全不必经过那份清单。
+
+### 作为 Git 仓库
+
+把 `agentty-plugin.json` 放在仓库**根目录**。用户在*自己动手*下粘贴 `https://` 地址，然后按**从 Git 安装**。
 
 ```
 your-plugin/
 ├── agentty-plugin.json
 ├── main.mjs
-├── agentty-plugin.mjs     随包携带的 SDK
+├── agentty-plugin.mjs     一并打包的 SDK
 ├── README.md
 └── LICENSE
 ```
 
 > [!IMPORTANT]
-> **把运行所需的一切都打包进去，包括 SDK 和任何 `node_modules`。** Agentty 不会执行 `npm install`，它直接启动你的入口点。缺少依赖的插件会在用户机器上因找不到模块而失败，只在日志里留下错误。
+> **把运行所需的一切都打包进去，包括 SDK 和任何 `node_modules`。** Agentty 不会执行 `npm install`，它原样启动你的入口文件。带着未打包依赖的插件会在用户机器上以 module-not-found 报错，只留在日志里。
 
-尽量写无依赖的代码。SDK 本身没有依赖，正是出于这个原因。
+能不用依赖就不用。SDK 本身没有依赖，正是出于这个原因。
 
-## 用文件夹分享
+### 作为文件夹
 
-**从文件夹安装…** 会把文件夹复制到 `~/.agentty/plugins/`。解压后得到正确名称文件夹的 zip 也一样可用——文件夹名必须与清单中的 `id` 相同。
+**从文件夹安装…** 会把文件夹复制到 `~/.agentty/plugins/`。解压后是正确名字的 zip 也一样——文件夹名必须等于清单里的 `id`。
 
 ## 版本
 
-`version` 采用 `major.minor.patch`。Agentty 会把它显示在卡片上，并在内置插件随新版本一起更新时据此提示**更新**。
+`version` 是 `major.minor.patch`。每次发布都要抬高；Agentty 靠比较它来判断已安装的插件有没有更新。
 
-从 Git 或文件夹安装的插件由用户重新安装来更新。请在 README 里说明你期望的方式，并让清单的 `links` 指向可以查看变更记录的页面。
+保持清单和代码同步：不再使用的权限应当从清单里去掉，改了名的命令不该留在 `contributes` 里。
 
-`apiVersion` 表示你依据哪个插件 API 版本编写，目前是 `1`。请填写你实际测试过的版本，而不是盲目跟随最新数字。
+## 下一步
 
-## 有用的 README
-
-商店卡片会显示 `description` 和最多六个 `links`，其余信息都应写进 README：
-
-- 它与什么集成，需要先装好什么才能工作
-- 申请了哪些权限，以及**为什么** —— 这是你能写下的最有用的一行
-- 它保存什么、保存在哪里
-- 遇到问题去哪里反馈
-
-如果你的插件与其他应用集成，请声明出来，好让卡片显示检测结果：
-
-```json
-{
-  "requires": {
-    "name": "Cosmica",
-    "url": "https://www.cosmica.ink/",
-    "note": "Needed to read and write notes"
-  },
-  "detect": ["~/Applications/Cosmica.app", "/Applications/Cosmica.app"]
-}
-```
-
-当 `detect` 命中时，卡片会对该用户标记为**推荐**。
-
-## 发布前的测试
-
-- **链接开发文件夹…** 直接运行你的工作副本，改完按**重启**即可，无需重新安装。
-- 卡片上的**日志**显示 stderr、协议错误、崩溃和退出码。
-- 用测试程序直接驱动它：它只是一个从 stdin 读取 JSON 行、向 stdout 写出的普通程序，测试可以发送 `initialize` 和你想验证的通知，再断言返回内容。
-- **用你实际声明的权限**来测试。没有权限的调用会以 `-32001` 失败，而开发时权限更多很容易忽略这一点。
-- 两种主题和长面板都要看一遍。面板宽 360px 且可滚动。
-
-## 保持可用
-
-- 处理 `shutdown` 并退出；1.5 秒后仍存活会被强制终止。
-- 除协议消息外不要写 stdout，请用 `plugin.log(...)` 或 `console.error(...)`。
-- 把上下文的每个字段都当作可选。里面有什么由权限和窗口状态决定。
-- 后续版本可能出现新的 UI 元素和上下文字段。遇到不认识的就忽略，不要报错失败。
-
-## 内置插件
-
-随 Agentty 一起发布的插件会跟着应用更新，并在其集成的应用已安装时在卡片上显示**推荐**。如果你认为自己的插件适合成为其中之一，请在 Agentty 发布仓库开一个 issue，说明它做什么、为谁而做。
+- [Rust 与 WebAssembly](/docs/plugin-rust) —— 构建模块
+- [清单参考](/docs/plugin-manifest) · [权限](/docs/plugin-permissions)

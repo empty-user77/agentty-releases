@@ -1,13 +1,117 @@
 ---
 title: Publishing a plugin
-description: Ship a plugin as a Git repository or a folder, version it, and keep it working as Agentty changes.
+description: List a plugin in the marketplace, or share it yourself as a Git repository or a folder.
 ---
 
-There is no central registry. A plugin is a folder with a manifest, so publishing one means putting that folder where people can get it.
+There are two ways to get a plugin to people, and which one is open to you depends on what kind of plugin it is.
 
-## Share it as a Git repository
+| | |
+|---|---|
+| **The marketplace** | A WebAssembly module whose source is public. Listed in **Plugins → Marketplace**, installed in one click, checked against a checksum. |
+| **Yourself** | Any plugin, including one that runs as a program. People install it from a Git repository or a folder, having chosen the source themselves. |
 
-Put `agentty-plugin.json` at the **root** of the repository. Users paste the `https://` URL under *Build your own* → **Install from Git**.
+## The marketplace
+
+[Agentty-Marketplace](https://github.com/empty-user77/Agentty-Marketplace) is the list Agentty reads. Plugins are added by pull request. Agentty's own plugins are there too, on the same footing — nothing is bundled into the application.
+
+A plugin in the list is **a WebAssembly module with its source in the open**. That is the whole rule, and both halves matter:
+
+- **WebAssembly**, because Agentty runs it itself and it reaches only what the protocol gives it. A plugin that runs as a program has everything you have, and Agentty will not install one from a list on the internet.
+- **Source in the open**, because the module is a binary. Anyone can read what it was built from, and build it again.
+
+### What installing does
+
+1. Agentty reads `index.json` over HTTPS. Every entry is checked again here — its id, its text, its permissions, the host its module comes from — and one that does not check out is left out of the list rather than shown.
+2. The Plugins page shows what the plugin is, where its source is, its licence, the size of the module and its checksum, and **what it may do** as full sentences under Permissions.
+3. On **Install**, Agentty downloads the module and weighs it against that checksum. Nothing reaches the plugins folder before they match.
+
+### Submitting one
+
+1. **Build and publish the module.** A GitHub release of your plugin's repository is the usual place.
+
+   ```bash
+   cargo build --release --target wasm32-unknown-unknown
+   cp target/wasm32-unknown-unknown/release/your_plugin.wasm your-plugin.wasm
+   shasum -a 256 your-plugin.wasm
+   wc -c your-plugin.wasm
+   ```
+
+2. **Write the entry.** Copy `plugins/_template.json` to `plugins/<your-plugin-id>.json`. The id matches the file name and the `id` in your `agentty-plugin.json`.
+
+   ```json
+   {
+     "id": "hello-world",
+     "name": "Hello World",
+     "version": "0.1.0",
+     "publisher": "Your Name",
+     "description": "One sentence about what it does.",
+     "icon": "sparkles",
+     "license": "MIT",
+     "source": "https://github.com/you/agentty-hello-world",
+     "keywords": ["example"],
+     "apiVersion": 1,
+     "surface": "sidebar",
+     "mode": "push",
+     "permissions": [],
+     "module": {
+       "url": "https://github.com/you/agentty-hello-world/releases/download/v0.1.0/hello-world.wasm",
+       "sha256": "…64 hex characters…",
+       "size": 93292
+     }
+   }
+   ```
+
+3. **Check it, then open a pull request.** CI runs the same checks.
+
+   ```bash
+   python3 scripts/validate.py --download   # fetch the module and check its checksum
+   python3 scripts/validate.py --index      # rebuild index.json
+   ```
+
+### The entry's fields
+
+| Field | |
+|---|---|
+| `id` | 2–40 characters, `a-z 0-9 -`; the file is `plugins/<id>.json` |
+| `name`, `version`, `description` | shown in Agentty. `name` up to 60 characters, `description` up to 300, `version` is `major.minor.patch` |
+| `publisher`, `license` | who made it, and under what licence |
+| `source` | the public repository the module is built from — **required**. On `github.com`, `gitlab.com`, `codeberg.org` or `git.sr.ht`; it does not have to be GitHub |
+| `homepage`, `keywords`, `icon` | optional; the icon is a name from Agentty's set |
+| `apiVersion` | the plugin protocol the module is built against; leave it out for `1` |
+| `surface` | where its icon sits: `sidebar`, `pane` (default) or `status` |
+| `mode` | how its panel opens: `push` (default), `overlay`, `window` or `full` |
+| `permissions` | what it asks for — shown before anyone installs it, and again on an update that asks for more |
+| `module.url` | `https://` on `github.com`, `raw.githubusercontent.com` or `objects.githubusercontent.com`. Put the version in the path so a release cannot be swapped underneath — a convention, not a check |
+| `module.sha256` | the checksum; Agentty refuses a download that does not match |
+| `module.size` | its size in bytes — the **exact** length, not an estimate. A download of any other length is refused. 8 MB at most |
+
+### What gets a plugin refused
+
+- A module that is not built from the repository in `source`, or a repository nobody can read.
+- A checksum that does not match what the URL serves.
+- Permissions the plugin does not use, or a description that does not say what it does with them.
+- Anything that pretends to be another plugin, another publisher, or Agentty itself.
+
+### Updating
+
+Change `version`, `module.url`, `module.sha256` and `module.size`, and open another pull request. Agentty offers the update to everyone who has it installed.
+
+An update that asks for **more** than the installed version says what it is adding and takes a second press. **Update all** leaves those out rather than taking them quietly, and says how many it left. So growing a plugin's permissions costs you the users who do not look again — write the description so that they do.
+
+If the new version uses something only a newer Agentty has, raise `apiVersion` with it. People on an older Agentty then keep the version they have and are told to update, instead of being handed a module their app cannot run — and Agentty does not count a version it cannot run as an update to one already installed.
+
+Deleting an entry stops Agentty offering the plugin. It stays installed for people who have it, and they can remove it from the Plugins page.
+
+> [!NOTE]
+> `AGENTTY_MARKETPLACE_INDEX` points Agentty at another list while you are writing one. A module may be served from a release of a repository, or from the same host as the list itself.
+
+## Sharing it yourself
+
+Nothing above is required to use a plugin. A plugin you keep to yourself, or to your company, never has to pass through that list.
+
+### As a Git repository
+
+Put `agentty-plugin.json` at the **root**. Users paste the `https://` URL under *Build your own* → **Install from Git**.
 
 ```
 your-plugin/
@@ -21,59 +125,19 @@ your-plugin/
 > [!IMPORTANT]
 > **Bundle everything the plugin needs to run, including the SDK and any `node_modules`.** Agentty does not run `npm install` — it starts your entry point as it is. A plugin with an unbundled dependency fails on the user's machine with a module-not-found error in its log.
 
-Prefer dependency-free code where you can. The SDK itself has no dependencies for exactly this reason.
+Prefer dependency-free code where you can. The SDK itself has none for exactly this reason.
 
-## Share it as a folder
+### As a folder
 
 **Install from Folder…** copies the folder into `~/.agentty/plugins/`. A zip that unpacks to a correctly named folder works the same way — the folder name must equal the `id` in the manifest.
 
 ## Versioning
 
-`version` is `major.minor.patch`. Agentty shows it on the card and uses it to offer an **Update** when a built-in plugin ships a newer version with Agentty.
+`version` is `major.minor.patch`. Raise it whenever you publish; Agentty compares it to decide whether an installed plugin has an update.
 
-For plugins installed from Git or a folder, the user updates by reinstalling. Say in your README how you expect that to happen, and keep the manifest's `links` pointing at a page where people can see what changed.
+Keep the manifest and the code in step: a permission you stopped using should leave the manifest too, and a command you renamed should not linger in `contributes`.
 
-`apiVersion` says which plugin API version you wrote against — currently `1`. Leave it at the version you tested with rather than following the newest number blindly.
+## Next
 
-## A README that helps
-
-The store card shows `description` and up to six `links`. Everything else people need belongs in the README:
-
-- what it integrates with, and what has to be installed for it to work
-- which permissions it asks for and **why** — the single most useful line you can write
-- what it stores, and where
-- how to report a problem
-
-If your plugin integrates with another application, declare it so the card can say whether it was found:
-
-```json
-{
-  "requires": {
-    "name": "Cosmica",
-    "url": "https://www.cosmica.ink/",
-    "note": "Needed to read and write notes"
-  },
-  "detect": ["~/Applications/Cosmica.app", "/Applications/Cosmica.app"]
-}
-```
-
-When `detect` matches, the card is marked **Recommended** for that user.
-
-## Test before you publish
-
-- **Link Folder for Development…** runs the plugin from your working copy, so you can edit and press **Restart** without reinstalling.
-- **Logs** on the card shows stderr, protocol errors, crashes and exit codes.
-- Drive the plugin from a test harness: it is an ordinary program reading JSON lines on stdin and writing them on stdout, so a test can send `initialize`, then the notifications you want to exercise, and assert on what comes back.
-- Try it with the permissions you actually declare. A call without its permission fails with `-32001`, and it is easy to miss that while developing with more access than you ship.
-- Check both themes and a long panel — the panel is 360 px wide and scrolls.
-
-## Keeping it working
-
-- Handle `shutdown` and exit; a plugin still alive 1.5 seconds later is terminated.
-- Never write to stdout except protocol messages. Use `plugin.log(...)` or `console.error(...)`.
-- Treat every field of the context as optional. Permissions, and the state of the window, decide what is present.
-- New UI element types and context fields may appear in later versions. Ignore what you do not know rather than failing on it.
-
-## Built-in plugins
-
-Plugins that ship inside Agentty update with the application, and their cards show **Recommended** when the app they integrate with is installed. If you think your plugin belongs there, open an issue on the Agentty releases repository describing what it does and who it is for.
+- [Rust and WebAssembly](/docs/plugin-rust) — building the module
+- [Manifest reference](/docs/plugin-manifest) · [Permissions](/docs/plugin-permissions)

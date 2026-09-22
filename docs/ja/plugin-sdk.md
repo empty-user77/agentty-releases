@@ -5,6 +5,9 @@ description: ハンドラ、呼び出し、パネル UI ビルダー、コンテ
 
 `agentty-plugin.mjs` は依存関係のない 1 ファイルです。型定義は同じ場所の `agentty-plugin.d.ts` にあります。プラグインページで**開発者ガイド**を押すと、両方が `~/.agentty/plugins/.sdk/` に展開されます。
 
+> [!NOTE]
+> この方法で書いたプラグインは利用者のマシンでプログラムとして動き、`PATH` に Node.js 18 以降が必要で、フォルダか Git リポジトリからインストールされます。[マーケットプレイス](/docs/plugin-publishing)は WebAssembly モジュールしか受け付けません。そちらは [Rust と WebAssembly](/docs/plugin-rust) を参照してください。
+
 ```js
 import { createPlugin, ui } from './agentty-plugin.mjs';
 
@@ -43,12 +46,16 @@ plugin.start();
 | `setBadge(text)` — タブ領域のボタンに最大 8 文字 | |
 | `getContext()` | |
 | `openUrl(url)` — http/https | |
+| `copy(text)` — クリップボードにコピー | |
 | `revealPath(path)` — ファイルマネージャーで表示 | `workspace.read` |
 | `injectPrompt(request)` | `prompt.inject` |
 | `sendToTerminal({ paneId, text, submit })` | `terminal.write` |
 | `getSession({ paneId, maxTurns })` | `session.read` |
 | `listWorkspaces()` | `workspace.read` |
+| `fetch(request)` — HTTP リクエスト | `net.request` |
 | `log(...)` — プラグインログ（stderr）に記録 | |
+
+プロトコルには `storage/get`・`storage/set`・`storage/keys`（プラグイン自身のフォルダにある JSON ドキュメント、権限不要）もあり、API バージョン 2 からは `host/timer`・`pane/status` もあります。Node のプラグインは自分でファイルを書いてもかまいませんが、storage はどちらの種類でも同じように動きます。[プロトコル](/docs/plugin-protocol)を参照してください。
 
 `plugin.info` には `initialize` のデータが、`plugin.context` には最新のコンテキストが入っています。
 
@@ -62,7 +69,7 @@ plugin.start();
 | `ui.section(title, children)` | 見出し付きのまとまり | |
 | `ui.text(text, style)` | `body`、`title`、`muted`、`small`、`code`、`error`、`success` | |
 | `ui.button(id, label, { icon, variant, disabled })` | `primary`、`secondary`、`ghost`、`danger` | `click` |
-| `ui.input(id, { placeholder, value })` | 1 行入力 | 入力が止まると `change`、Enter で `submit`。`event.value` が文字列 |
+| `ui.input(id, { placeholder, value, rows })` | 1 行入力、`rows` が 1 より大きければその行数のテキストエリア（最大 24） | 入力が止まると `change`、Enter で `submit`。`event.value` が文字列 |
 | `ui.list(id, items, { empty })` | 行 `{ id, title, subtitle, detail, icon, tone, actions }` | `event.item` を伴う `select`、行のボタンは `event.item`・`event.action` を伴う `action` |
 | `ui.choice(id, [{ value, label }], value)` | 分割選択 | 値を伴う `change` |
 | `ui.toggle(id, label, value)` | スイッチ | 新しい真偽値を伴う `change` |
@@ -97,7 +104,7 @@ plugin.onEvent('notes', (event, context) => {
 ```
 
 > [!NOTE]
-> 制限: 要素 2,000 個、深さ 12 階層、テキスト 1 つあたり 20,000 文字。パネルの再描画は最短 50ms 間隔、通知は最短 700ms 間隔です。毎秒 240 件を超えて送るプラグインは暴走とみなされ停止します。
+> 制限: 要素 2,000 個、深さ 12 階層、文字列 1 つあたり 20,000 文字。`choice` の選択肢とリスト項目のボタンも要素として数えます。パネルの再描画は最短 50ms 間隔、通知は最短 700ms 間隔です。毎秒 240 件を超えて送るプラグインは暴走とみなされ停止します。
 
 ## コンテキスト
 

@@ -237,12 +237,30 @@
           }
         },
         {
+          "slug": "plugin-rust",
+          "title": {
+            "en": "Rust and WebAssembly",
+            "ko": "Rust와 WebAssembly",
+            "ja": "Rust と WebAssembly",
+            "zh": "Rust 与 WebAssembly"
+          }
+        },
+        {
           "slug": "plugin-sdk",
           "title": {
             "en": "Node.js SDK",
             "ko": "Node.js SDK",
             "ja": "Node.js SDK",
             "zh": "Node.js SDK"
+          }
+        },
+        {
+          "slug": "plugin-agentos",
+          "title": {
+            "en": "AgentOS plugins",
+            "ko": "AgentOS 플러그인",
+            "ja": "AgentOS プラグイン",
+            "zh": "AgentOS 插件"
           }
         },
         {

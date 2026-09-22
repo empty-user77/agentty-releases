@@ -45,11 +45,11 @@ description: agentty-plugin.json のすべてのフィールド — 識別情報
 | フィールド | 既定値 | 説明 |
 |---|---|---|
 | `main` | 必須 | プラグインフォルダからの相対パスのエントリポイント |
-| `runtime` | `node` | `node`（ログインシェル `PATH` の Node.js 18+）、`python`（`python3 <main>`）、`executable`（`<main>` を直接実行） |
-| `apiVersion` | `1` | 作成時に基準としたプラグイン API のバージョン |
+| `runtime` | `node` | `node`（ログインシェル `PATH` の Node.js 18+）、`python`（`python3 <main>`）、`executable`（`<main>` を直接実行）、または `wasm` — `<main>` が Agentty 自身の実行する WebAssembly モジュール。[Rust と WebAssembly](/docs/plugin-rust) を参照 |
+| `apiVersion` | `1` | 作成時に基準としたプラグイン API のバージョン。`2` は [AgentOS プラグイン](/docs/plugin-agentos)に必要な `host/timer` と `pane/status` を加えます。古いバージョンしか話せない Agentty は、実行できないものを入れる代わりにその旨を伝えます |
 | `activationEvents` | `[]` | `["onStartup"]` なら Agentty と同時に起動、なければ最初の使用時 |
 
-Agentty はプラグインフォルダを作業ディレクトリとしてプログラムを起動します。
+Agentty はプラグインフォルダを作業ディレクトリとしてプログラムを起動します。`wasm` プラグインはプログラムを起動しません。モジュールは Agentty の中で動き、作業ディレクトリも環境変数もファイルもありません。
 
 ## 他のアプリとの連携
 
@@ -61,11 +61,12 @@ Agentty はプラグインフォルダを作業ディレクトリとしてプロ
 ## 権限
 
 ```json
-"permissions": ["prompt.inject", "terminal.write", "session.read", "workspace.read"]
+"permissions": ["net.request", "prompt.inject", "terminal.write", "session.read", "workspace.read"]
 ```
 
 | 権限 | できること |
 |---|---|
+| `net.request` | プラグインが指定したアドレスへの HTTP リクエスト |
 | `prompt.inject` | プロンプトの送信 |
 | `terminal.write` | 開いているペインへの入力 |
 | `session.read` | AI 会話の読み取り |
@@ -78,10 +79,29 @@ Agentty はプラグインフォルダを作業ディレクトリとしてプロ
 ### パネル
 
 ```json
-"contributes": { "panel": { "title": "Hello", "icon": "sparkles" } }
+"contributes": { "panel": { "title": "Hello", "icon": "sparkles", "surface": "sidebar", "mode": "push" } }
 ```
 
-タブ領域にボタンが付き、ターミナルの右にパネルが入ります（幅 360px、縦スクロール）。プラグインが UI ツリーで中身を描きます — [SDK](/docs/plugin-sdk) を参照。
+プラグインにボタンと、UI ツリーで満たすパネル（幅 360 px、縦スクロール）を与えます。[SDK](/docs/plugin-sdk) を参照してください。
+
+`surface` はボタンの位置を決めます。
+
+| `surface` | 位置 |
+|---|---|
+| `pane`（既定） | ターミナル上のタブ列 |
+| `sidebar` | 左端のアクティビティバー、Agentty 自身のページと並んで |
+| `status` | 下部のステータスバー |
+
+`mode` はパネルの開き方を決めます。利用者はパネルのレイアウトボタンで変更でき、その選択は保たれます。最初の動作は次のとおりです。
+
+| `mode` | |
+|---|---|
+| `push`（既定） | ターミナルの横にドッキングし、ターミナルが場所を空けます |
+| `overlay` | 窓の右端に浮かび、他は動きません |
+| `window` | 独立した窓。移動とサイズ変更ができます |
+| `full` | ターミナルとページが使う領域の全体 |
+
+ドッキングしたパネルが残りの窓を押しつぶすほど大きくなることはありません。ドッキングできる幅を越えて引くと、浮かぶパネルになります。
 
 ### コマンド
 
@@ -129,12 +149,12 @@ message-square minimize-2 minus network notebook notebook-pen package panel-left
 panel-left-open pencil picture-in-picture-2 play plug plus power puzzle refresh-cw rocket rotate-cw
 rows-2 save scroll-text search send settings shield-alert sparkles square square-plus
 square-terminal star sticky-note tag terminal trash-2 undo-2 unlink upload users wand-sparkles
-workflow wrench x zap git-fork file lock graduation-cap
+workflow wrench x zap git-fork file lock graduation-cap x-twitter
 ```
 
 ## 環境変数
 
-プラグインのプログラムには次の環境変数が渡されます。
+プログラムとして動くプラグイン（`node`, `python`, `executable`）には次の環境変数が渡されます。`wasm` プラグインには何も渡されず、必要なものは[自身のストレージ](/docs/plugin-permissions)に置きます。
 
 | 変数 | 意味 |
 |---|---|
@@ -145,4 +165,4 @@ workflow wrench x zap git-fork file lock graduation-cap
 | `AGENTTY_LANGUAGE` | 利用者の言語（`en`、`ko`、`ja`、`zh`） |
 | `AGENTTY_BIN` | `agentty` コマンドラインツールのパス |
 
-保存するものはすべて `AGENTTY_PLUGIN_DATA` の中に置いてください。
+保存するものはすべて `AGENTTY_PLUGIN_DATA` の中か、どちらの種類でも動く `storage/*` に置いてください。
