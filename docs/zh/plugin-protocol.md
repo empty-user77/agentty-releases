@@ -16,7 +16,7 @@ Agentty 以插件文件夹作为工作目录启动程序：
 | `node` | `node <main>` —— 来自登录 shell `PATH`、Homebrew、Volta 或 nvm 的 Node.js |
 | `python` | `python3 <main>` |
 | `executable` | `<main>` |
-| `wasm` | 无 —— `<main>` 是 Agentty 自己运行的 WebAssembly 模块，见 [WebAssembly 插件](#webassembly)|
+| `wasm` | 无 —— `<main>` 是 Agentty 自己运行的 WebAssembly 模块，见 [WebAssembly 插件](#webassembly-插件)|
 
 消息是 [JSON-RPC 2.0](https://www.jsonrpc.org/specification) 对象，**每行一个**，UTF-8 编码，经由 stdin（Agentty → 插件）和 stdout（插件 → Agentty）传递。超过 16MB 的行会被拒绝。stdout 上非 JSON 的内容会被记录并忽略，stderr 进入插件日志。
 
@@ -66,7 +66,7 @@ Agentty 以插件文件夹作为工作目录启动程序：
 
 ### 接触网络
 
-`net/fetch` 是插件接触网络的唯一途径。Agentty 给它划下的边界——方法、请求头、大小、超时、重定向——都在[权限](/docs/plugin-permissions#net-request)里。一句话说完：请求里不会带上任何属于你的东西，没有 cookie，没有已保存的凭据，只有插件自己放进去的内容。
+`net/fetch` 是插件接触网络的唯一途径。Agentty 给它划下的边界——方法、请求头、大小、超时、重定向——都在[权限](/docs/plugin-permissions#net-request-允许做什么)里。一句话说完：请求里不会带上任何属于你的东西，没有 cookie，没有已保存的凭据，只有插件自己放进去的内容。
 
 ### 等待，以及听到智能体干完了
 

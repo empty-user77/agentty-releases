@@ -16,7 +16,7 @@ Agentty はプラグインフォルダを作業ディレクトリとしてプロ
 | `node` | `node <main>` — ログインシェルの `PATH`、Homebrew、Volta、nvm の Node.js |
 | `python` | `python3 <main>` |
 | `executable` | `<main>` |
-| `wasm` | なし — `<main>` が Agentty 自身の実行する WebAssembly モジュール。[WebAssembly プラグイン](#webassembly)を参照 |
+| `wasm` | なし — `<main>` が Agentty 自身の実行する WebAssembly モジュール。[WebAssembly プラグイン](#webassembly-プラグイン)を参照 |
 
 メッセージは [JSON-RPC 2.0](https://www.jsonrpc.org/specification) のオブジェクトで、**1 行に 1 つ**、UTF-8 で、stdin（Agentty → プラグイン）と stdout（プラグイン → Agentty）をやり取りします。16MB を超える行は拒否されます。stdout の JSON でない内容はログに残って無視され、stderr はプラグインログへ送られます。
 
@@ -66,7 +66,7 @@ stdin が閉じるか `shutdown` が来たら終了してください。`shutdow
 
 ### ネットワークに届く
 
-`net/fetch` はプラグインがネットワークに届く唯一の方法です。Agentty が課す範囲 — メソッド、ヘッダ、サイズ、タイムアウト、リダイレクト — は[権限](/docs/plugin-permissions#net-request)にあります。要点は、リクエストにあなたのものは何も載らないということです。クッキーも保存された資格情報もなく、プラグインが自分で入れたものだけが行きます。
+`net/fetch` はプラグインがネットワークに届く唯一の方法です。Agentty が課す範囲 — メソッド、ヘッダ、サイズ、タイムアウト、リダイレクト — は[権限](/docs/plugin-permissions#net-request-でできること)にあります。要点は、リクエストにあなたのものは何も載らないということです。クッキーも保存された資格情報もなく、プラグインが自分で入れたものだけが行きます。
 
 ### 待つ、そしてエージェントが終わったのを聞く
 

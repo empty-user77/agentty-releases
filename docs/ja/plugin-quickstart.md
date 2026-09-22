@@ -35,7 +35,7 @@ Agentty がテンプレートからプラグインを作り — SDK、型定義�
 そのあとコードを検査させ（`node --check main.mjs`、または `cargo build --release --target wasm32-unknown-unknown`）、Agentty のプラグインカードで**再起動**を押して反映します。エラーは同じカードの**ログ**にあります。
 
 > [!TIP]
-> テンプレートのフォルダの外で作業するエージェント向けにプロンプトを書くなら、[マニフェスト リファレンス](/docs/plugin-manifest)、[UI ツリー](/docs/plugin-protocol)、[プロトコル](/docs/plugin-protocol)を示してください。この 3 ページで全部です。
+> テンプレートのフォルダの外で作業するエージェント向けにプロンプトを書くなら、[マニフェスト リファレンス](/docs/plugin-manifest)、[UI ツリー](/docs/plugin-protocol#ui-ツリー)、[プロトコル](/docs/plugin-protocol)を示してください。この 3 ページで全部です。
 
 ## 手で書く — Rust
 
