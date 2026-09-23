@@ -51,7 +51,7 @@ The **files panel** (**⌥⌘B**) shows the project tree, every working tree, wh
 You can also ask an agent to split work up itself — "do A, B and C in parallel". It asks Agentty, you confirm once, and each task starts in its own split pane and its own worktree.
 
 > [!NOTE]
-> Worktrees are created only for a *second* session in a project that is already busy. Working alone keeps you in the folder you opened.
+> Worktrees come into play only for a *second* session in a project that is already busy — Agentty asks whether to create a new worktree or open the existing one. Working alone keeps you in the folder you opened.
 
 ## 5. Arrange the window
 
