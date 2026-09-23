@@ -30,7 +30,7 @@ New tabs start in the workspace's folder. **Settings → General** can ask for a
 
 **⌘D** splits right, **⇧⌘D** splits down. **⌘] / ⌘[** move between panes; drag the divider to resize.
 
-Each agent pane has a status bar with the model, context window, rate-limit usage, branch and folder. Its position (above or below the terminal) and which items it shows are in **Settings → Appearance**.
+Each agent pane has a status bar with the model, context window, rate-limit usage, branch, folder and the local server ports running in that pane. Its position (above or below the terminal) and which items it shows are in **Settings → Appearance**.
 
 Double-click that bar — the status, or the icon it is dragged by — to give the pane the whole tab. Double-click again to put the split back the way it was.
 
