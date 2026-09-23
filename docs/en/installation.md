@@ -50,6 +50,8 @@ The git page, working trees and branch switching use the `git` on your `PATH`. O
 
 Agentty checks for new versions at launch and hourly.
 
+**Later** on the notice puts it off for a day rather than until the next check, and an update waiting that way stays visible in the status bar, so postponing it is not the same as losing it.
+
 - **macOS and Windows** — Agentty downloads the update, checks it against the release checksums, installs it and relaunches.
 - **Linux** — Agentty tells you a new version is out and links to the release page; install the new `.deb` or `.rpm` with your package manager.
 

@@ -22,6 +22,7 @@ Language (English, 한국어, 日本語, 中文), and the behavior of the things
 | Stop servers on close | Closing a pane stops the local servers started in it |
 | Share anonymous usage statistics | See [Telemetry](/docs/telemetry) |
 | Menu bar icon | Keeps Agentty running after you close the window (macOS) |
+| Prevent sleep | Keeps the machine awake so a long unattended run is not cut short — always, or for a set 1 to 72 hours. Uses more power |
 
 ## Project
 

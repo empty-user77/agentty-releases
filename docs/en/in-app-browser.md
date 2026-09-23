@@ -17,6 +17,12 @@ A local server started in a tab appears as a `:port` chip in the workspace list 
 
 Closing the tab that started a server stops the server. Turn either behavior off in **Settings → General** and **Settings → Browser**.
 
+## Responsive mode
+
+The phone button beside the address bar lays the page out at a device's size instead of the panel's: iPhone SE, iPhone 15 Pro, iPhone 15 Pro Max, Pixel 8, Galaxy S24, iPad mini, iPad Air, iPad Pro 12.9", Laptop, Desktop — or any width and height you type. The page is centred and scaled to fit whatever room the panel has, so a 1920-wide desktop layout is legible in a narrow panel. Rotate swaps the two numbers, and dragging the right or bottom edge resizes by hand.
+
+Turning it off returns the page to the panel's own width.
+
 ## Letting an agent drive it
 
 Claude Code and Codex can control this browser through MCP: click, type, read the console, take a screenshot. It is how an agent checks its own work on a running page.
@@ -32,6 +38,7 @@ The tools an agent gets are:
 | `browser_click` | Click an element |
 | `browser_console` | Read the page's console output |
 | `browser_screenshot` | Capture the page |
+| `browser_viewport` | Lay the page out at a device size, `WxH`, or `off` |
 | `browser_close` | Close the panel |
 
 They are registered with the agent when Agentty starts it, so there is nothing to install or configure. A typical loop is: the agent starts the dev server, opens the page, clicks through the change it just made, reads the console for errors, and fixes what it finds.
