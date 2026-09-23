@@ -20,7 +20,7 @@ Click the branch name in any pane header to switch branches, pull, push, or copy
 
 ## A worktree per session
 
-When you open a second AI session in a project where another one is already working, Agentty starts it in **its own git worktree on a new branch**, taken from the project's default branch. The two agents never edit the same files.
+When you open a second AI session in a project where another one is already working, Agentty asks where it goes: **Create a new worktree** starts it in its own git worktree on a new branch, taken from the project's default branch, so the two agents never edit the same files; **Open the existing worktree** starts it right next to the other one, for when two sessions on one branch is what you want. The same question comes up for `claude` or `codex` typed into a terminal.
 
 - Worktrees live in `~/.agentty/worktrees/`, on branches named `agentty/<name>`.
 - Turn this off in **Settings → General** if you want every session in the same folder.

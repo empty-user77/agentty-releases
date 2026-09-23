@@ -1,6 +1,6 @@
 ---
 title: Monitoring
-description: What your AI work costs, which AI processes are running, and what your tabs talk to.
+description: What your AI work costs, which AI processes are running, what your tabs talk to, every git worktree on this computer, and what fills the disk.
 ---
 
 **⌥⌘U** opens Monitoring. Everything here is computed on your machine; nothing is uploaded.
@@ -38,3 +38,27 @@ A capture proxy that lists what your tabs talk to: start capture, open a tab, fi
 - Records live in memory, are limited in number, are never written to disk, and disappear when Agentty quits.
 
 Stopping capture stops the recording. Tabs that were given the proxy keep using it so they don't lose their network.
+
+## Worktrees
+
+Every git worktree on this computer, grouped by project: its branch, when it was last worked on (its last commit or newest uncommitted change), uncommitted files, commits the default branch doesn't have yet, its pull request (open, merged or closed — read through the GitHub CLI you are signed in to), and its size.
+
+Worktrees are looked for in the folders under your home folder, in Agentty's worktree folder and in the folders you have open. Projects with nothing but their own folder are left out.
+
+Tick several and press **Remove** — or **Select safe ones** first, which picks every tree with no uncommitted changes whose commits are already merged. The dialog asks first:
+
+- **Delete their branches too** removes a branch only when nothing on it would be lost: git's own check, or a pull request merged at exactly the branch's last commit (so squash merges count). Other branches stay.
+- Trees with uncommitted changes are skipped unless you tick that they go too — those changes are then lost.
+- The project folder itself and a tree a tab is working in can't be selected.
+
+## Disk
+
+How full the disk is — in use, can be cleared, free — and which folders in your home folder take the room, each opening onto its own biggest folders.
+
+What can be cleared is only what is made again by itself:
+
+- **Project build output** — per project, **Remove build junk** (Cargo `target`, `.next`, Gradle `build`, SwiftPM `.build`, …) and **Clear cache** (`.turbo`, `.parcel-cache`, `node_modules/.cache`, pytest/mypy/Ruff caches, …). A folder only counts when its tool's project file sits next to it, and Cargo's `target` also needs the tag Cargo writes into it.
+- **Caches** — the development tools' own caches: npm, Yarn, Bun, pip, uv, Go, the Cargo registry, Gradle, Homebrew, CocoaPods, JetBrains, and Xcode DerivedData.
+- **Other** — the trash and log files.
+
+Dependencies such as `node_modules` or `~/.m2`, and anything a project needs to run, are never offered. Each removal is confirmed first and checked again right before it happens; links are never followed. The next build or install just takes a little longer.
