@@ -1,3 +1,15 @@
+> [!IMPORTANT]
+> **Agentty has moved to [github.com/empty-user77/Agentty](https://github.com/empty-user77/Agentty).**
+> Since v0.2.0, Agentty is open source under the Apache License 2.0, and its source, documentation and releases all
+> live there. Download new versions from **[the new releases page](https://github.com/empty-user77/Agentty/releases)**.
+>
+> This repository is kept only so older apps can update: v0.2.0 is its last release, and installing it moves automatic
+> updates to the new repository. Nothing new will be published here.
+>
+> **Agentty가 [github.com/empty-user77/Agentty](https://github.com/empty-user77/Agentty)로 이전했습니다.** v0.2.0부터
+> Apache-2.0 오픈소스이며, 새 버전은 [새 릴리스 페이지](https://github.com/empty-user77/Agentty/releases)에서 받으세요.
+> 이 저장소는 이전 버전의 자동 업데이트를 위해서만 남겨 두며, 더 이상 새 버전을 올리지 않습니다.
+
 # Agentty
 
 <p align="center">
